@@ -1,0 +1,1 @@
+# lsorbsi2026.2-grupo2.projeto
