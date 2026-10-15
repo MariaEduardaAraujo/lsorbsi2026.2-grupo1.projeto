@@ -2,7 +2,7 @@
 
 > **Disciplina:** LSOR <br>
 > **Turma:** bsi-26-2 (2026.2) <br>
-> **Professor(a):** Alaelson Jatobá <br>  
+> **Professor(a):** Alaelson Jatobá <br>
 > **Aluno(a):** Daniel do Carmo, Davi da Silva, João Pedro de Castro Laranjeira e Maria Eduarda de Araújo <br>
 > **Grupo:** 1  <br>
 > **Datas:** 14/10/2026 <br>
@@ -349,12 +349,11 @@ sudo systemctl enable --now ssh
 sudo systemctl status ssh --no-pager
 ```
 
-O login por senha é aceito por padrão, e os usuários dos integrantes já podem acessar as VMs.
+O login por senha é aceito por padrão, e os usuários dos integrantes podem acessar as VMs.
 
 ---
 
 ## 5. Testes e Capturas de Tela
-
 Todos os testes seguem a ordem do roteiro. Cada figura corresponde a uma captura de tela.
 
 ### 5.1 Gateway — rede, encaminhamento e regras
@@ -363,63 +362,21 @@ Todos os testes seguem a ordem do roteiro. Cada figura corresponde a uma captura
 
 ![Figura 9](INSERIR_LINK_DA_IMAGEM)
 
-Comandos utilizados:
-
-```bash
-ip -br a
-ip route
-```
-
-Esperado: `enp0s3` com `172.20.23.X/22`, `enp0s8` com `192.168.26.17/28` e `default via 172.20.20.1`.
-
 **Figura 10 – Verificação do `ip_forward`**
 
 ![Figura 10](INSERIR_LINK_DA_IMAGEM)
-
-Comando utilizado:
-
-```bash
-sudo sysctl net.ipv4.ip_forward
-```
-
-Esperado: `net.ipv4.ip_forward = 1`.
 
 **Figura 11 – Regras de NAT**
 
 ![Figura 11](INSERIR_LINK_DA_IMAGEM)
 
-Comando utilizado:
-
-```bash
-sudo iptables -t nat -L -n -v
-```
-
-Esperado: regra `MASQUERADE` na cadeia `POSTROUTING`, saída `enp0s3`, com contadores de pacotes crescendo após os testes das VMs.
-
 **Figura 12 – Regras FORWARD**
 
 ![Figura 12](INSERIR_LINK_DA_IMAGEM)
 
-Comando utilizado:
-
-```bash
-sudo iptables -L -n -v
-```
-
-Esperado: `ACCEPT` de `enp0s8` para `enp0s3` (NEW, ESTABLISHED) e de `enp0s3` para `enp0s8` (ESTABLISHED, RELATED).
-
 **Figura 13 – Persistência das regras**
 
 ![Figura 13](INSERIR_LINK_DA_IMAGEM)
-
-Comandos utilizados:
-
-```bash
-sudo netfilter-persistent save
-sudo cat /etc/iptables/rules.v4
-```
-
-Para validar, reiniciar o gateway (`sudo reboot`) e repetir as Figuras 10 a 12: as regras e o `ip_forward` devem continuar ativos.
 
 ### 5.2 Conectividade entre as VMs do grupo
 
@@ -427,34 +384,9 @@ Para validar, reiniciar o gateway (`sudo reboot`) e repetir as Figuras 10 a 12: 
 
 ![Figura 14](INSERIR_LINK_DA_IMAGEM)
 
-Executar em cada VM (e no gateway):
-
-```bash
-for h in g1-pc1-gw g1-pc1-vm1 g1-pc1-vm2 g1-pc2-vm1 g1-pc2-vm2 g1-pc3-vm1 g1-pc3-vm2 g1-pc4-vm1 g1-pc4-vm2; do
-  ping -c 2 -W 2 $h > /dev/null && echo OK $h || echo FALHA $h
-  ping -c 2 -W 2 $h.grupo1.bsi-26-2.maceio.lab > /dev/null && echo OK $h.FQDN || echo FALHA $h.FQDN
-done
-
-for ip in 17 18 19 20 21 22 23 24 25; do
-  ping -c 2 -W 2 192.168.26.$ip > /dev/null && echo OK 192.168.26.$ip || echo FALHA 192.168.26.$ip
-done
-```
-
-Esperado: todas as linhas com `OK`.
-
 **Figura 15 – Acesso SSH entre as VMs**
 
 ![Figura 15](INSERIR_LINK_DA_IMAGEM)
-
-Comandos utilizados:
-
-```bash
-ssh maria.eduarda@g1-pc3-vm2
-ssh maria.eduarda@g1-pc4-vm1.grupo1.bsi-26-2.maceio.lab
-ssh maria.eduarda@192.168.26.17
-```
-
-No primeiro acesso, o SSH pede para confirmar a impressão digital do host (`yes`). Esperado: prompt da VM de destino, confirmado com `hostname` e `w`.
 
 ### 5.3 Saída para a internet pelo gateway
 
@@ -462,114 +394,18 @@ No primeiro acesso, o SSH pede para confirmar a impressão digital do host (`yes
 
 ![Figura 16](INSERIR_LINK_DA_IMAGEM)
 
-Comandos utilizados:
-
-```bash
-ping -c 4 192.168.26.17    # gateway do grupo
-ping -c 4 172.20.20.1      # gateway do laboratório
-ping -c 4 1.1.1.1          # internet por IP
-```
-
 **Figura 17 – Resolução de nomes**
 
 ![Figura 17](INSERIR_LINK_DA_IMAGEM)
-
-Comandos utilizados:
-
-```bash
-ping -c 4 google.com
-nslookup google.com
-```
 
 **Figura 18 – Rastreamento da rota**
 
 ![Figura 18](INSERIR_LINK_DA_IMAGEM)
 
-Comandos utilizados:
-
-```bash
-sudo apt install -y traceroute    # se necessário
-traceroute google.com
-ip route
-```
-
-Esperado: o **primeiro salto é o gateway do grupo** (`192.168.26.17`, ou `g1-pc1-gw...` pelo `/etc/hosts`), o segundo é o gateway do laboratório (`172.20.20.1`) e os demais são da internet.
-
 ---
 
 ## 6. Problemas e Soluções
-
-> Manter nesta seção apenas os problemas que de fato ocorreram. Os itens abaixo são os mais comuns neste tipo de montagem.
-
-### 6.1 Netplan não aplica ou mostra aviso de permissões
-
-**Problema:**  
-`netplan apply` avisa que o arquivo tem permissões abertas, ou as alterações não surtem efeito (indentação errada, ou outro arquivo em `/etc/netplan` sobrepondo).
-
-**Solução:**  
-Manter `routes` no mesmo nível de `addresses`, ajustar as permissões e conferir se há mais de um arquivo.
-
-**Comandos utilizados:**
-
-```bash
-ls /etc/netplan
-sudo chmod 600 /etc/netplan/*.yaml
-sudo netplan try
-sudo netplan apply
-```
-
-### 6.2 Nome da interface diferente de `enp0s3` / `enp0s8`
-
-**Problema:**  
-O nome muda conforme a ordem das placas no VirtualBox.
-
-**Solução:**  
-Conferir com `ip -br link` e ajustar o Netplan e as regras do IPTables ao nome real.
-
-### 6.3 VMs sem acesso à internet
-
-**Problema:**  
-`ping 192.168.26.17` funciona, mas `ping 1.1.1.1` falha.
-
-**Solução:**  
-No gateway, verificar nesta ordem:
-
-```bash
-sudo sysctl net.ipv4.ip_forward
-sudo iptables -t nat -L -n -v
-sudo iptables -L -n -v
-ip route
-ping -c 2 172.20.20.1
-```
-
-Se o ping ao gateway do laboratório falhar, o IP WAN escolhido pode estar em conflito ou fora da faixa; testar outro IP livre.
-
-### 6.4 Ping por IP funciona, mas por nome não
-
-**Problema:**  
-`ping 1.1.1.1` responde, mas `ping google.com` não.
-
-**Solução:**  
-Conferir os `nameservers` no Netplan e em `/etc/resolv.conf` (`resolvectl status`). Para nomes do grupo, conferir `/etc/hosts` e usar `getent hosts <nome>`.
-
-### 6.5 Regras do IPTables somem após reiniciar
-
-**Problema:**  
-O NAT deixa de funcionar depois do `reboot`.
-
-**Solução:**  
-Executar `sudo netfilter-persistent save` após criar as regras e conferir `/etc/iptables/rules.v4` e o serviço `netfilter-persistent`.
-
-### 6.6 SSH recusa conexão
-
-**Problema:**  
-`Connection refused` ou `Permission denied`.
-
-**Solução:**  
-Verificar `sudo systemctl status ssh`, a existência do usuário (`getent passwd <usuário>`) e a senha definida com `passwd`.
-
-> **Caso nenhum problema tenha ocorrido:**  
-> Durante a realização da atividade, não foram identificados problemas que impedissem a configuração do ambiente. Os procedimentos foram realizados conforme as orientações e os testes apresentaram os resultados esperados.
+Durante a realização da atividade, não foram identificados problemas que impedissem a configuração do ambiente. Os procedimentos foram realizados conforme as orientações e os testes apresentaram os resultados esperados.
 
 ---
 
