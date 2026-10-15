@@ -1,1 +1,589 @@
-# lsorbsi2026.2-grupo2.projeto
+# Relatório de Projeto — Rede Virtualizada com 8 VMs e Gateway NAT (Etapa 1)
+
+> **Disciplina:** LSOR <br>
+> **Turma:** bsi-26-2 (2026.2) <br>
+> **Professor(a):** Alaelson Jatobá <br>  
+> **Aluno(a):** Daniel do Carmo, Davi da Silva, João Pedro de Castro Laranjeira e Maria Eduarda de Araújo <br>
+> **Grupo:** 1  <br>
+> **Datas:** 14/10/2026 <br>
+
+## 1. Ambiente
+
+| Item                | VM1 — Gateway       | VM2-VM8 — Cliente    |
+| ------------------- | ------------------- | -------------------- |
+| Sistema operacional | Ubuntu Server 26.04 | Ubuntu Server 26.04  |
+| Plataforma          | VirtualBox          | VirtualBox           |
+| Função              | Gateway             | Cliente              |
+| Interface interna   | `enp0s8`            | intnet               |
+| Interface externa   | `enp0s3`            | -                    |
+| Rede interna        | `172.20.23.67/22`   | `192.168.26.18-25/28`|
+| Gateway interno     | `172.20.20.1`       | `192.168.26.17`      |
+
+## 2. Objetivo
+
+O objetivo desta atividade foi montar um ambiente de rede com **8 máquinas virtuais Ubuntu Server (VM1 a VM8)** e **1 VM gateway**, totalizando 9 VMs. O gateway possui duas placas de rede: a **WAN** (`enp0s3`), ligada à rede do laboratório (`172.20.20.1/22`), e a **LAN** (`enp0s8`), ligada à rede do grupo (`192.168.26.16/28`). Toda a saída das VMs para o laboratório e para a internet passa por ele.
+
+Foram realizados:
+1. Criação das 9 VMs e configuração de IP estático com Netplan.
+2. Habilitação do encaminhamento IPv4 e criação de regras de **NAT/MASQUERADE** com IPTables no gateway, com persistência após reinicialização.
+3. Configuração de hostnames (FQDN), arquivo `/etc/hosts` e usuários dos integrantes em todas as VMs.
+4. Ativação do SSH e testes de conectividade, resolução de nomes, acesso remoto e rastreamento de rotas.
+
+Este documento reúne os conceitos das Aulas 01, 02, 04, 05, 06, 07 e 08 em um único ambiente e serve também como tutorial para reproduzir o projeto.
+
+## 3. Ambiente
+### 3.1 Rede física do laboratório
+
+| Parâmetro | Valor |
+|:--|:--|
+| Rede do laboratório          | `172.20.20.0/22`        |
+| Gateway / DNS do laboratório | `172.20.20.1`           |
+| Faixa para IPs estáticos     | `172.20.23.67`          |
+
+### 3.2 Hardware padrão de cada VM
+
+| Item                        | Especificação       |
+| --------------------------- | ------------------- |
+| Sistema operacional         | Ubuntu Server 26.04 |
+| Plataforma de virtualização | VirtualBox          |
+| Memória RAM                 | 2 GB                |
+| Processadores               | 1 vCPU              |
+| Armazenamento               | 32 GB               |
+| Rede                        | -                   |
+| Computador hospedeiro       | Windows 11          |
+
+### 3.3 Endereçamento do grupo (faixa 16–31)
+A turma usa `192.168.26.0/24` dividida em sub-redes `/28`. O Grupo 1 usa `192.168.26.16-31/28`.
+
+| Parâmetro | Valor |
+|:--|:--|
+| Endereço da rede | `192.168.26.16` |
+| Máscara | `255.255.255.240` (`/28`) |
+| Primeiro IP útil (gateway, LAN) | `192.168.26.17` |
+| VM1 a VM8 | `192.168.26.18` a `192.168.26.25` |
+| IPs livres | `192.168.26.26` a `192.168.26.30` |
+| Broadcast | `192.168.26.31` |
+| Total de hosts úteis | 14 (2⁴ − 2) |
+
+O `/28` tem 16 endereços (32 − 28 = 4 bits de host). O primeiro (.16) é a rede e o último (.31) é o broadcast.
+
+### 3.4 Nomes, interfaces e IPs
+
+Hostname curto: `vmZ`, ou `gt-vm` para o gateway, sempre em minúsculas. FQDN: hostname + `.grupo1.bsi-26-2.maceio.lab`.
+
+| Host | Placa / modo VirtualBox | Interface | IP / máscara | Gateway padrão | FQDN |
+|:--|:--|:--|:--|:--|:--|
+| gt-vm | Adaptador 1 · Bridge (WAN) | enp0s3 | 172.20.23.67/22 | 172.20.20.1 | gt-vm.grupo1.bsi-26-2.maceio.lab|
+| gt-vm | Adaptador 2 · Bridge (LAN) | enp0s8 | 192.168.26.17/28 | — | — |
+| vm1 (VM1) | Adaptador 1 · Bridge | enp0s3 | 192.168.26.18/28 | 192.168.26.17 | vm1.grupo1.bsi-26-2.maceio.lab |
+| vm2 (VM2) | Adaptador 1 · Bridge | enp0s3 | 192.168.26.19/28 | 192.168.26.17 | vm2.grupo1.bsi-26-2.maceio.lab |
+| vm3 (VM3) | Adaptador 1 · Bridge | enp0s3 | 192.168.26.20/28 | 192.168.26.17 | vm3.grupo1.bsi-26-2.maceio.lab |
+| vm4 (VM4) | Adaptador 1 · Bridge | enp0s3 | 192.168.26.21/28 | 192.168.26.17 | vm4.grupo1.bsi-26-2.maceio.lab |
+| vm5 (VM5) | Adaptador 1 · Bridge | enp0s3 | 192.168.26.22/28 | 192.168.26.17 | vm5.grupo1.bsi-26-2.maceio.lab |
+| vm6 (VM6) | Adaptador 1 · Bridge | enp0s3 | 192.168.26.23/28 | 192.168.26.17 | vm6.grupo1.bsi-26-2.maceio.lab |
+| vm7 (VM7) | Adaptador 1 · Bridge | enp0s3 | 192.168.26.24/28 | 192.168.26.17 | vm7.grupo1.bsi-26-2.maceio.lab |
+| vm8 (VM8) | Adaptador 1 · Bridge | enp0s3 | 192.168.26.25/28 | 192.168.26.17 | vm8.grupo1.bsi-26-2.maceio.lab |
+
+### 3.5 Topologia
+
+São 4 PCs do laboratório, com 2 VMs em cada um. O gateway é uma VM extra no PC1.
+
+```text
+                  Internet
+                     |
+          Gateway do laboratório
+          172.20.20.1  (rede 172.20.20.0/22)
+                     |
+   ======= switch físico do laboratório =======
+      |         |          |          |
+     PC1       PC2        PC3        PC4
+   +-------+  +-------+  +-------+  +-------+
+   | gt    |  | vm3   |  | vm5   |  | vm7   |
+   | vm1   |  | vm4   |  | vm6   |  | vm8   |
+   | vm2   |  +-------+  +-------+  +-------+
+   +-------+
+
+  Gateway (g1-pc1-gw)
+    enp0s3 (WAN) = 172.20.23.67/22   -> rede do laboratório
+    enp0s8 (LAN) = 192.168.26.17/28 -> rede do grupo
+
+  Rede do grupo 1: 192.168.26.16/28
+    VM1..VM8 = 192.168.26.18 .. 192.168.26.25
+    rota padrão de todas as VMs = 192.168.26.17
+```
+
+**Figura 1 – Topologia lógica e endereçamento do Grupo 1**
+
+![Figura 1](INSERIR_LINK_DA_IMAGEM)
+
+**Figura 2 – Topologia física (4 PCs, 2 VMs em cada, gateway no PC1)**
+
+![Figura 2](INSERIR_LINK_DA_IMAGEM)
+
+## 4. Procedimento
+
+### 4.1 Criação das VMs
+
+1. Copiar a ISO do Ubuntu Server para `C:\2026\BSI\VM\original`.
+2. Criar as VMs em `C:\2026\BSI\VM\<NomeDoAluno>`, com 2048 MB de RAM, 1 vCPU e disco de 32 GB (VDI, dinâmico).
+3. Instalar o Ubuntu Server 26.04 com particionamento LVM (`/` 29 GB, `/boot` 1 GB, swap 2 GB) e usuário `administrador`.
+4. No VirtualBox, configurar as placas:
+   - **Gateway:** Adaptador 1 e Adaptador 2 em *Placa em Ponte* (mesma placa física do host).
+   - **VM1 a VM8:** Adaptador 1 em *Placa em Ponte*.
+5. Se o teclado estiver desconfigurado, usar `sudo dpkg-reconfigure keyboard-configuration` (ABNT2).
+
+**Figura 3 – Adaptadores de rede do gateway no VirtualBox**
+
+![Figura 3](INSERIR_LINK_DA_IMAGEM)
+
+**Figura 4 – Adaptador de rede de uma VM do grupo no VirtualBox**
+
+![Figura 4](INSERIR_LINK_DA_IMAGEM)
+
+### 4.2 Gateway — Netplan com duas placas 
+Confirmar os nomes das interfaces e escolher um IP livre na rede do laboratório:
+
+```bash
+ip -br link
+ping -c 2 172.20.23.X     # deve FALHAR: o IP está livre
+```
+
+Editar o arquivo de Netplan (`ls /etc/netplan` mostra o nome real; neste projeto usa-se `00-installer-config.yaml`):
+
+```bash
+sudo nano /etc/netplan/00-installer-config.yaml
+```
+
+```yaml
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s3:            # WAN - rede do laboratório
+      dhcp4: false
+      addresses:
+        - 172.20.23.67/22   # IP livre escolhido (Aula 06)
+      routes:
+        - to: default
+          via: 172.20.20.1
+      nameservers:
+        addresses: [172.20.20.1, 1.1.1.1, 8.8.8.8]
+    enp0s8:            # LAN - rede do grupo
+      dhcp4: false
+      addresses:
+        - 192.168.26.17/28
+```
+
+```bash
+sudo netplan apply
+```
+
+A saída deve mostrar `enp0s3` com o IP `172.20.23.67/22`, `enp0s8` com `192.168.26.17/28` e a rota padrão via `172.20.20.1`.
+
+**Figura 5 – Netplan do gateway**
+
+![Figura 5](INSERIR_LINK_DA_IMAGEM)
+
+### 4.3 Gateway — Encaminhamento IPv4
+Habilitar imediatamente e tornar permanente:
+
+```bash
+sudo sysctl -w net.ipv4.ip_forward=1
+echo 'net.ipv4.ip_forward=1' | sudo tee /etc/sysctl.d/99-ipforward.conf
+sudo sysctl --system
+sudo sysctl net.ipv4.ip_forward
+```
+
+Resultado esperado: `net.ipv4.ip_forward = 1`.
+
+### 4.4 Gateway — NAT e regras de FORWARD com IPTables
+Limpar regras antigas (opcional) e criar as novas:
+
+```bash
+sudo iptables -F
+sudo iptables -t nat -F
+sudo iptables -X
+
+# Mascaramento na saída pela WAN
+sudo iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE
+
+# LAN -> WAN (novas conexões e já estabelecidas)
+sudo iptables -A FORWARD -i enp0s8 -o enp0s3 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+
+# WAN -> LAN (somente retorno)
+sudo iptables -A FORWARD -i enp0s3 -o enp0s8 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+```
+
+O `MASQUERADE` troca o IP de origem `192.168.26.18-25` pelo IP da WAN do gateway (`172.20.23.67`), e o laboratório passa a ver apenas esse endereço. A regra de retorno só aceita pacotes de conexões iniciadas pela LAN, então a rede do grupo não fica exposta a conexões novas vindas da WAN.
+
+Verificação:
+
+```bash
+sudo iptables -t nat -L -n -v
+sudo iptables -L -n -v
+```
+
+### 4.5 Gateway — Persistência das regras
+
+```bash
+sudo apt update
+sudo apt install -y iptables-persistent
+sudo netfilter-persistent save
+sudo cat /etc/iptables/rules.v4
+```
+
+As regras IPv4 ficam em `/etc/iptables/rules.v4`. O `ip_forward` já está persistente pelo arquivo `/etc/sysctl.d/99-ipforward.conf`.
+
+### 4.6 VM1 a VM8 — Netplan com o gateway do grupo
+Em cada VM, o arquivo é igual, mudando apenas o IP (ver tabela 3.4):
+
+```yaml
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s3:
+      dhcp4: false
+      addresses:
+        - 192.168.26.<IP-DA-VM>/28    # .18 a .25
+      routes:
+        - to: default
+          via: 192.168.26.17
+      nameservers:
+        addresses: [172.20.20.1, 1.1.1.1, 8.8.8.8]
+```
+
+```bash
+sudo netplan apply
+```
+
+| VM | Hostname | `<IP-DA-VM>` |
+|:--|:--|:--:|
+| VM1 | vm1 | .18 |
+| VM2 | vm2 | .19 |
+| VM3 | vm3 | .20 |
+| VM4 | vm4 | .21 |
+| VM5 | vm5 | .22 |
+| VM6 | vm6 | .23 |
+| VM7 | vm7 | .24 |
+| VM8 | vm8 | .25 |
+
+**Figura 6 – Netplan de uma VM do grupo**
+
+![Figura 6](INSERIR_LINK_DA_IMAGEM)
+
+### 4.7 Hostname com FQDN (Aula 08, seção 0)
+Em cada uma das 9 VMs, usa-se o FQDN completo. Exemplo na VM1:
+
+```bash
+sudo hostnamectl set-hostname vm1.grupo1.bsi-26-2.maceio.lab
+hostname status
+```
+
+No gateway:
+
+```bash
+sudo hostnamectl set-hostname gt-vm.grupo1.bsi-26-2.maceio.lab
+```
+
+### 4.8 /etc/hosts
+O bloco abaixo é igual nas **9 VMs**, inclusive no gateway. Para o gateway, vale o IP da LAN (`enp0s8`), que é o endereço que as VMs alcançam diretamente.
+
+```bash
+sudo nano /etc/hosts
+
+# Grupo 1
+192.168.26.17    gt-vm.grupo1.bsi-26-2.maceio.lab  gt-vm
+192.168.26.18    vm1.grupo1.bsi-26-2.maceio.lab    vm1
+192.168.26.19    vm2.grupo1.bsi-26-2.maceio.lab    vm2
+192.168.26.20    vm3.grupo1.bsi-26-2.maceio.lab    vm3
+192.168.26.21    vm4.grupo1.bsi-26-2.maceio.lab    vm4
+192.168.26.22    vm5.grupo1.bsi-26-2.maceio.lab    vm5
+192.168.26.23    vm6.grupo1.bsi-26-2.maceio.lab    vm6
+192.168.26.24    vm7.grupo1.bsi-26-2.maceio.lab    vm7
+192.168.26.25    vm8.grupo1.bsi-26-2.maceio.lab    vm8
+```
+
+A linha `127.0.1.1` criada na instalação deve apontar para o nome da própria VM (exemplo na VM1):
+```bash
+127.0.1.1   gt-vm.grupo1.bsi-26-2.maceio.lab vm1
+```
+
+Verificação:
+
+```bash
+getent hosts g1-pc1-gw
+getent hosts g1-pc4-vm2.grupo1.bsi-26-2.maceio.lab
+```
+
+**Figura 7 – Hostname e `/etc/hosts` configurados**
+
+![Figura 7](INSERIR_LINK_DA_IMAGEM)
+
+### 4.9 Usuários
+Cada VM tem o administrador (`administrador`) e **um usuário por integrante**, no formato `nomesobrenome` (minúsculas, sem acentos), com home em `/home/<usuário>`, shell `/bin/bash` e participação no grupo `sudo`. O conjunto é o mesmo em todas as VMs, inclusive no gateway.
+
+```bash
+sudo useradd mariaeduarda
+
+# Verificação
+getent passwd mariaeduarda
+ls -l /home
+id mariaeduarda
+```
+
+**Figura 8 – Usuários criados na VM**
+
+![Figura 8](INSERIR_LINK_DA_IMAGEM)
+
+---
+#Editar
+
+### 4.10 Acesso remoto SSH
+Em todas as VMs:
+
+```bash
+sudo apt update
+sudo apt install -y openssh-server
+sudo systemctl enable --now ssh
+sudo systemctl status ssh --no-pager
+```
+
+O login por senha é aceito por padrão, e os usuários dos integrantes já podem acessar as VMs.
+
+---
+
+## 5. Testes e Capturas de Tela
+
+Todos os testes seguem a ordem do roteiro. Cada figura corresponde a uma captura de tela.
+
+### 5.1 Gateway — rede, encaminhamento e regras
+
+**Figura 9 – Interfaces e rotas do gateway**
+
+![Figura 9](INSERIR_LINK_DA_IMAGEM)
+
+Comandos utilizados:
+
+```bash
+ip -br a
+ip route
+```
+
+Esperado: `enp0s3` com `172.20.23.X/22`, `enp0s8` com `192.168.26.17/28` e `default via 172.20.20.1`.
+
+**Figura 10 – Verificação do `ip_forward`**
+
+![Figura 10](INSERIR_LINK_DA_IMAGEM)
+
+Comando utilizado:
+
+```bash
+sudo sysctl net.ipv4.ip_forward
+```
+
+Esperado: `net.ipv4.ip_forward = 1`.
+
+**Figura 11 – Regras de NAT**
+
+![Figura 11](INSERIR_LINK_DA_IMAGEM)
+
+Comando utilizado:
+
+```bash
+sudo iptables -t nat -L -n -v
+```
+
+Esperado: regra `MASQUERADE` na cadeia `POSTROUTING`, saída `enp0s3`, com contadores de pacotes crescendo após os testes das VMs.
+
+**Figura 12 – Regras FORWARD**
+
+![Figura 12](INSERIR_LINK_DA_IMAGEM)
+
+Comando utilizado:
+
+```bash
+sudo iptables -L -n -v
+```
+
+Esperado: `ACCEPT` de `enp0s8` para `enp0s3` (NEW, ESTABLISHED) e de `enp0s3` para `enp0s8` (ESTABLISHED, RELATED).
+
+**Figura 13 – Persistência das regras**
+
+![Figura 13](INSERIR_LINK_DA_IMAGEM)
+
+Comandos utilizados:
+
+```bash
+sudo netfilter-persistent save
+sudo cat /etc/iptables/rules.v4
+```
+
+Para validar, reiniciar o gateway (`sudo reboot`) e repetir as Figuras 10 a 12: as regras e o `ip_forward` devem continuar ativos.
+
+### 5.2 Conectividade entre as VMs do grupo
+
+**Figura 14 – Ping entre todas as VMs por IP, nome curto e FQDN**
+
+![Figura 14](INSERIR_LINK_DA_IMAGEM)
+
+Executar em cada VM (e no gateway):
+
+```bash
+for h in g1-pc1-gw g1-pc1-vm1 g1-pc1-vm2 g1-pc2-vm1 g1-pc2-vm2 g1-pc3-vm1 g1-pc3-vm2 g1-pc4-vm1 g1-pc4-vm2; do
+  ping -c 2 -W 2 $h > /dev/null && echo OK $h || echo FALHA $h
+  ping -c 2 -W 2 $h.grupo1.bsi-26-2.maceio.lab > /dev/null && echo OK $h.FQDN || echo FALHA $h.FQDN
+done
+
+for ip in 17 18 19 20 21 22 23 24 25; do
+  ping -c 2 -W 2 192.168.26.$ip > /dev/null && echo OK 192.168.26.$ip || echo FALHA 192.168.26.$ip
+done
+```
+
+Esperado: todas as linhas com `OK`.
+
+**Figura 15 – Acesso SSH entre as VMs**
+
+![Figura 15](INSERIR_LINK_DA_IMAGEM)
+
+Comandos utilizados:
+
+```bash
+ssh maria.eduarda@g1-pc3-vm2
+ssh maria.eduarda@g1-pc4-vm1.grupo1.bsi-26-2.maceio.lab
+ssh maria.eduarda@192.168.26.17
+```
+
+No primeiro acesso, o SSH pede para confirmar a impressão digital do host (`yes`). Esperado: prompt da VM de destino, confirmado com `hostname` e `w`.
+
+### 5.3 Saída para a internet pelo gateway
+
+**Figura 16 – Ping para a internet**
+
+![Figura 16](INSERIR_LINK_DA_IMAGEM)
+
+Comandos utilizados:
+
+```bash
+ping -c 4 192.168.26.17    # gateway do grupo
+ping -c 4 172.20.20.1      # gateway do laboratório
+ping -c 4 1.1.1.1          # internet por IP
+```
+
+**Figura 17 – Resolução de nomes**
+
+![Figura 17](INSERIR_LINK_DA_IMAGEM)
+
+Comandos utilizados:
+
+```bash
+ping -c 4 google.com
+nslookup google.com
+```
+
+**Figura 18 – Rastreamento da rota**
+
+![Figura 18](INSERIR_LINK_DA_IMAGEM)
+
+Comandos utilizados:
+
+```bash
+sudo apt install -y traceroute    # se necessário
+traceroute google.com
+ip route
+```
+
+Esperado: o **primeiro salto é o gateway do grupo** (`192.168.26.17`, ou `g1-pc1-gw...` pelo `/etc/hosts`), o segundo é o gateway do laboratório (`172.20.20.1`) e os demais são da internet.
+
+---
+
+## 6. Problemas e Soluções
+
+> Manter nesta seção apenas os problemas que de fato ocorreram. Os itens abaixo são os mais comuns neste tipo de montagem.
+
+### 6.1 Netplan não aplica ou mostra aviso de permissões
+
+**Problema:**  
+`netplan apply` avisa que o arquivo tem permissões abertas, ou as alterações não surtem efeito (indentação errada, ou outro arquivo em `/etc/netplan` sobrepondo).
+
+**Solução:**  
+Manter `routes` no mesmo nível de `addresses`, ajustar as permissões e conferir se há mais de um arquivo.
+
+**Comandos utilizados:**
+
+```bash
+ls /etc/netplan
+sudo chmod 600 /etc/netplan/*.yaml
+sudo netplan try
+sudo netplan apply
+```
+
+### 6.2 Nome da interface diferente de `enp0s3` / `enp0s8`
+
+**Problema:**  
+O nome muda conforme a ordem das placas no VirtualBox.
+
+**Solução:**  
+Conferir com `ip -br link` e ajustar o Netplan e as regras do IPTables ao nome real.
+
+### 6.3 VMs sem acesso à internet
+
+**Problema:**  
+`ping 192.168.26.17` funciona, mas `ping 1.1.1.1` falha.
+
+**Solução:**  
+No gateway, verificar nesta ordem:
+
+```bash
+sudo sysctl net.ipv4.ip_forward
+sudo iptables -t nat -L -n -v
+sudo iptables -L -n -v
+ip route
+ping -c 2 172.20.20.1
+```
+
+Se o ping ao gateway do laboratório falhar, o IP WAN escolhido pode estar em conflito ou fora da faixa; testar outro IP livre.
+
+### 6.4 Ping por IP funciona, mas por nome não
+
+**Problema:**  
+`ping 1.1.1.1` responde, mas `ping google.com` não.
+
+**Solução:**  
+Conferir os `nameservers` no Netplan e em `/etc/resolv.conf` (`resolvectl status`). Para nomes do grupo, conferir `/etc/hosts` e usar `getent hosts <nome>`.
+
+### 6.5 Regras do IPTables somem após reiniciar
+
+**Problema:**  
+O NAT deixa de funcionar depois do `reboot`.
+
+**Solução:**  
+Executar `sudo netfilter-persistent save` após criar as regras e conferir `/etc/iptables/rules.v4` e o serviço `netfilter-persistent`.
+
+### 6.6 SSH recusa conexão
+
+**Problema:**  
+`Connection refused` ou `Permission denied`.
+
+**Solução:**  
+Verificar `sudo systemctl status ssh`, a existência do usuário (`getent passwd <usuário>`) e a senha definida com `passwd`.
+
+> **Caso nenhum problema tenha ocorrido:**  
+> Durante a realização da atividade, não foram identificados problemas que impedissem a configuração do ambiente. Os procedimentos foram realizados conforme as orientações e os testes apresentaram os resultados esperados.
+
+---
+
+## 7. Conclusão
+
+A atividade permitiu integrar, em um único ambiente, o que foi praticado nas aulas anteriores: instalação e particionamento do Ubuntu Server, usuários e permissões, acesso remoto por SSH, endereçamento estático com Netplan e roteamento com NAT.
+
+Foram implementadas as 9 VMs do Grupo 1 (8 VMs e o gateway), na sub-rede `192.168.26.16/28`: o gateway usa o `.17` na LAN, as VMs ocupam do `.18` ao `.25`, e a faixa termina no broadcast `.31`. A VM gateway, com duas placas em Bridge, encaminha pacotes IPv4 e aplica NAT/MASQUERADE com IPTables, de modo que toda a saída do grupo para o laboratório (`172.20.20.0/22`) e para a internet passa por ela. As regras de FORWARD permitem o tráfego da LAN para a WAN e aceitam apenas o retorno de conexões já estabelecidas. A persistência com `iptables-persistent` e `sysctl.d` garante que a configuração sobreviva a reinicializações.
+
+Os testes de `ping` (por IP, nome curto e FQDN), `ssh`, `nslookup` e `traceroute` confirmaram a comunicação entre todas as VMs, a resolução de nomes e a saída para a internet, com o gateway do grupo aparecendo como primeiro salto. Com isso, os objetivos da Etapa 1 foram alcançados, com uma compreensão prática de roteamento, NAT e organização de uma rede em sub-redes `/28`.
+
+---
+
+## Referências
+
+* Projeto de LSOR — Etapa 1 (bsi-26-2): [projeto-etapa1](https://github.com/alaelson/labredes-2026.2/tree/main/projeto-etapa1)
+* Roteiros das aulas: Aula 01, 02, 04, 05, 06, 07 e 08 — [alaelson/labredes-2026.2](https://github.com/alaelson/labredes-2026.2)
