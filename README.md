@@ -138,7 +138,10 @@ São 4 PCs do laboratório, com 2 VMs em cada um. O gateway é uma VM extra no P
 
 **Figura 4 – Adaptador de rede de uma VM do grupo no VirtualBox**
 
-![Figura 4](INSERIR_LINK_DA_IMAGEM)
+<img width="954" height="419" alt="oooo" src="https://github.com/user-attachments/assets/80091ef1-e187-40fd-93a6-e8a5c9c30003" />
+<img width="954" height="419" alt="oooo" src="https://github.com/user-attachments/assets/8e99fc84-926d-4aff-9bf4-ce6c62488b02" />
+<img width="889" height="518" alt="Captura de tela 2026-10-21 195317" src="https://github.com/user-attachments/assets/e5bf0e53-7072-4c68-8e2a-0e6df1083958" />
+
 
 ### 4.2 Gateway — Netplan com duas placas 
 Confirmar os nomes das interfaces e escolher um IP livre na rede do laboratório:
@@ -270,7 +273,7 @@ sudo netplan apply
 
 **Figura 6 – Netplan de uma VM do grupo**
 
-![Figura 6](INSERIR_LINK_DA_IMAGEM)
+<img width="954" height="419" alt="oooo" src="https://github.com/user-attachments/assets/8376e8c9-d05d-47bc-886f-ebe4325355b2" />
 
 ### 4.7 Hostname com FQDN (Aula 08, seção 0)
 Em cada uma das 9 VMs, usa-se o FQDN completo. Exemplo na VM1:
@@ -318,8 +321,7 @@ getent hosts g1-pc4-vm2.grupo1.bsi-26-2.maceio.lab
 
 **Figura 7 – Hostname e `/etc/hosts` configurados**
 
-![Figura 7](INSERIR_LINK_DA_IMAGEM)
-
+<img width="762" height="357" alt="host" src="https://github.com/user-attachments/assets/7e61acd6-92be-4dda-bbb6-103936fb1dfc" />
 ### 4.9 Usuários
 Cada VM tem o administrador (`administrador`) e **um usuário por integrante**, no formato `nomesobrenome` (minúsculas, sem acentos), com home em `/home/<usuário>`, shell `/bin/bash` e participação no grupo `sudo`. O conjunto é o mesmo em todas as VMs, inclusive no gateway.
 
@@ -334,11 +336,9 @@ id mariaeduarda
 
 **Figura 8 – Usuários criados na VM**
 
-![Figura 8](INSERIR_LINK_DA_IMAGEM)
+<img width="758" height="237" alt="usu" src="https://github.com/user-attachments/assets/61937065-b949-4d2b-9a99-957e9be3bd71" />
 
 ---
-#Editar
-
 ### 4.10 Acesso remoto SSH
 Em todas as VMs:
 
