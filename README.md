@@ -69,12 +69,12 @@ O `/28` tem 16 endereços (32 − 28 = 4 bits de host). O primeiro (.16) é a re
 
 ### 3.4 Nomes, interfaces e IPs
 
-Hostname curto: `vmZ`, ou `gt-vm` para o gateway, sempre em minúsculas. FQDN: hostname + `.grupo1.bsi-26-2.maceio.lab`.
+Hostname curto: `vmZ`, ou `vm-gateway` para o gateway, sempre em minúsculas. FQDN: hostname + `.grupo1.bsi-26-2.maceio.lab`.
 
 | Host | Placa / modo VirtualBox | Interface | IP / máscara | Gateway padrão | FQDN |
 |:--|:--|:--|:--|:--|:--|
-| gt-vm | Adaptador 1 · Bridge (WAN) | enp0s3 | 172.20.23.67/22 | 172.20.20.1 | gt-vm.grupo1.bsi-26-2.maceio.lab|
-| gt-vm | Adaptador 2 · Bridge (LAN) | enp0s8 | 192.168.26.17/28 | — | — |
+| vm-gateway | Adaptador 1 · Bridge (WAN) | enp0s3 | 172.20.23.67/22 | 172.20.20.1 | vm-gateway.grupo1.bsi-26-2.maceio.lab|
+| vm-gateway | Adaptador 2 · Bridge (LAN) | enp0s8 | 192.168.26.17/28 | — | — |
 | vm1 (VM1) | Adaptador 1 · Bridge | enp0s3 | 192.168.26.18/28 | 192.168.26.17 | vm1.grupo1.bsi-26-2.maceio.lab |
 | vm2 (VM2) | Adaptador 1 · Bridge | enp0s3 | 192.168.26.19/28 | 192.168.26.17 | vm2.grupo1.bsi-26-2.maceio.lab |
 | vm3 (VM3) | Adaptador 1 · Bridge | enp0s3 | 192.168.26.20/28 | 192.168.26.17 | vm3.grupo1.bsi-26-2.maceio.lab |
@@ -137,9 +137,6 @@ São 4 PCs do laboratório, com 2 VMs em cada um. O gateway é uma VM extra no P
 ![Figura 3](INSERIR_LINK_DA_IMAGEM)
 
 **Figura 4 – Adaptador de rede de uma VM do grupo no VirtualBox**
-
-<img width="954" height="419" alt="oooo" src="https://github.com/user-attachments/assets/80091ef1-e187-40fd-93a6-e8a5c9c30003" />
-<img width="954" height="419" alt="oooo" src="https://github.com/user-attachments/assets/8e99fc84-926d-4aff-9bf4-ce6c62488b02" />
 <img width="889" height="518" alt="Captura de tela 2026-10-21 195317" src="https://github.com/user-attachments/assets/e5bf0e53-7072-4c68-8e2a-0e6df1083958" />
 
 
@@ -185,7 +182,7 @@ A saída deve mostrar `enp0s3` com o IP `172.20.23.67/22`, `enp0s8` com `192.168
 
 **Figura 5 – Netplan do gateway**
 
-![Figura 5](INSERIR_LINK_DA_IMAGEM)
+<img width="790" height="425" alt="1  vm gateway - configuracao netplan" src="https://github.com/user-attachments/assets/c68ba1cd-8192-4ea6-98b5-8f706bab4a5a" />
 
 ### 4.3 Gateway — Encaminhamento IPv4
 Habilitar imediatamente e tornar permanente:
@@ -286,7 +283,7 @@ hostname status
 No gateway:
 
 ```bash
-sudo hostnamectl set-hostname gt-vm.grupo1.bsi-26-2.maceio.lab
+sudo hostnamectl set-hostname vm-gateway.grupo1.bsi-26-2.maceio.lab
 ```
 
 ### 4.8 /etc/hosts
@@ -296,7 +293,7 @@ O bloco abaixo é igual nas **9 VMs**, inclusive no gateway. Para o gateway, val
 sudo nano /etc/hosts
 
 # Grupo 1
-192.168.26.17    gt-vm.grupo1.bsi-26-2.maceio.lab  gt-vm
+192.168.26.17    vm-gateway.grupo1.bsi-26-2.maceio.lab  vm-gateway
 192.168.26.18    vm1.grupo1.bsi-26-2.maceio.lab    vm1
 192.168.26.19    vm2.grupo1.bsi-26-2.maceio.lab    vm2
 192.168.26.20    vm3.grupo1.bsi-26-2.maceio.lab    vm3
@@ -309,7 +306,7 @@ sudo nano /etc/hosts
 
 A linha `127.0.1.1` criada na instalação deve apontar para o nome da própria VM (exemplo na VM1):
 ```bash
-127.0.1.1   gt-vm.grupo1.bsi-26-2.maceio.lab vm1
+127.0.1.1   vm-gateway.grupo1.bsi-26-2.maceio.lab vm1
 ```
 
 Verificação:
@@ -320,8 +317,8 @@ getent hosts g1-pc4-vm2.grupo1.bsi-26-2.maceio.lab
 ```
 
 **Figura 7 – Hostname e `/etc/hosts` configurados**
+<img width="762" height="357" alt="host" src="https://github.com/user-attachments/assets/7e61acd6-92be-4dda-bbb6-103936fb1dfc" /> <br>
 
-<img width="762" height="357" alt="host" src="https://github.com/user-attachments/assets/7e61acd6-92be-4dda-bbb6-103936fb1dfc" />
 ### 4.9 Usuários
 Cada VM tem o administrador (`administrador`) e **um usuário por integrante**, no formato `nomesobrenome` (minúsculas, sem acentos), com home em `/home/<usuário>`, shell `/bin/bash` e participação no grupo `sudo`. O conjunto é o mesmo em todas as VMs, inclusive no gateway.
 
@@ -372,11 +369,10 @@ Todos os testes seguem a ordem do roteiro. Cada figura corresponde a uma captura
 
 **Figura 12 – Regras FORWARD**
 
-![Figura 12](INSERIR_LINK_DA_IMAGEM)
-
+<img width="1280" height="800" alt="2  vm gateway - configuracao iptables" src="https://github.com/user-attachments/assets/a242b57e-084b-4974-8b9f-7161c54cd64d" />
 **Figura 13 – Persistência das regras**
 
-![Figura 13](INSERIR_LINK_DA_IMAGEM)
+<img width="801" height="596" alt="3  vm gateway - persistindo iptables" src="https://github.com/user-attachments/assets/2e6b73a6-31a3-4462-ae49-b027b3e3cb6d" />
 
 ### 5.2 Conectividade entre as VMs do grupo
 
