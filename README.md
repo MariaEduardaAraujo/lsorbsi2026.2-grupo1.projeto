@@ -114,11 +114,11 @@ São 4 PCs do laboratório, com 2 VMs em cada um. O gateway é uma VM extra no P
 
 **Figura 1 – Topologia lógica e endereçamento do Grupo 1**
 
-![Figura 1](INSERIR_LINK_DA_IMAGEM)
+<img width="1800" height="1604" alt="topologia-logica-etapa1" src="https://github.com/user-attachments/assets/a2ba2103-a5af-42c1-bea3-097961819022" />
 
 **Figura 2 – Topologia física (4 PCs, 2 VMs em cada, gateway no PC1)**
 
-![Figura 2](INSERIR_LINK_DA_IMAGEM)
+<img width="1780" height="830" alt="topologia-fisica-etapa1" src="https://github.com/user-attachments/assets/9461fcd7-5357-4c57-9025-9b3d11313ea0" />
 
 ## 4. Procedimento
 
@@ -134,7 +134,9 @@ São 4 PCs do laboratório, com 2 VMs em cada um. O gateway é uma VM extra no P
 
 **Figura 3 – Adaptadores de rede do gateway no VirtualBox**
 
-![Figura 3](INSERIR_LINK_DA_IMAGEM)
+<img width="908" height="540" alt="7  vm gateway - print placa de rede 1" src="https://github.com/user-attachments/assets/74764615-244b-4094-b2c7-34392ba714d4" />
+
+<img width="909" height="547" alt="8  vm gateway - print placa de rede 2" src="https://github.com/user-attachments/assets/ae125e04-eb52-46c6-a9a9-23dd0177029c" />
 
 **Figura 4 – Adaptador de rede de uma VM do grupo no VirtualBox**
 <img width="889" height="518" alt="Captura de tela 2026-10-21 195317" src="https://github.com/user-attachments/assets/e5bf0e53-7072-4c68-8e2a-0e6df1083958" />
@@ -357,11 +359,11 @@ Todos os testes seguem a ordem do roteiro. Cada figura corresponde a uma captura
 
 **Figura 9 – Interfaces e rotas do gateway**
 
-![Figura 9](INSERIR_LINK_DA_IMAGEM)
+<img width="515" height="382" alt="5  vm gateway print do hosts" src="https://github.com/user-attachments/assets/d6fdadb4-d119-48a5-ac2f-df9fc6d13819" />
 
 **Figura 10 – Verificação do `ip_forward`**
 
-![Figura 10](INSERIR_LINK_DA_IMAGEM)
+<img width="459" height="61" alt="4  vm gateway comando sysctl ipv4" src="https://github.com/user-attachments/assets/d847f41d-dfeb-4026-a452-b9843f01cb89" />
 
 **Figura 11 – Regras de NAT**
 
@@ -382,21 +384,23 @@ Todos os testes seguem a ordem do roteiro. Cada figura corresponde a uma captura
 
 **Figura 15 – Acesso SSH entre as VMs**
 
-![Figura 15](INSERIR_LINK_DA_IMAGEM)
+<img width="1280" height="800" alt="6  vm1 ssh pra vm2" src="https://github.com/user-attachments/assets/6a2828b7-9b5a-4af7-9d23-623253b0efeb" />
 
 ### 5.3 Saída para a internet pelo gateway
 
 **Figura 16 – Ping para a internet**
 
-![Figura 16](INSERIR_LINK_DA_IMAGEM)
+<img width="596" height="338" alt="Captura de tela 2026-10-21 203309" src="https://github.com/user-attachments/assets/186e4854-0d1f-4906-b990-1f082106dfe8" />
 
 **Figura 17 – Resolução de nomes**
 
-![Figura 17](INSERIR_LINK_DA_IMAGEM)
+<img width="859" height="271" alt="Captura de tela 2026-10-21 204026" src="https://github.com/user-attachments/assets/1fd6424d-0e74-4b24-a319-d9f3bbcd75c1" />
+
+<img width="809" height="331" alt="Captura de tela 2026-10-21 203444" src="https://github.com/user-attachments/assets/2a0b0a2b-e2ca-4eb3-94d7-b9448c1a229e" />
 
 **Figura 18 – Rastreamento da rota**
 
-![Figura 18](INSERIR_LINK_DA_IMAGEM)
+<img width="941" height="262" alt="Captura de tela 2026-10-21 203531" src="https://github.com/user-attachments/assets/113987a1-09c3-4335-b2ce-ea52347607cf" />
 
 ---
 
