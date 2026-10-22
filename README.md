@@ -9,13 +9,13 @@
 
 ## 1. Ambiente
 
-| Item                | VM1 — Gateway       | VM2-VM8 — Cliente    |
+| Item                | VM — Gateway        | VM1-VM8 — Clientes   |
 | ------------------- | ------------------- | -------------------- |
 | Sistema operacional | Ubuntu Server 26.04 | Ubuntu Server 26.04  |
 | Plataforma          | VirtualBox          | VirtualBox           |
 | Função              | Gateway             | Cliente              |
 | Interface interna   | `enp0s8`            | intnet               |
-| Interface externa   | `enp0s3`            | -                    |
+| Interface externa   | `enp0s3`            | `enp0s3`             |
 | Rede interna        | `172.20.23.67/22`   | `192.168.26.18-25/28`|
 | Gateway interno     | `172.20.20.1`       | `192.168.26.17`      |
 
@@ -49,7 +49,7 @@ Este documento reúne os conceitos das Aulas 01, 02, 04, 05, 06, 07 e 08 em um �
 | Memória RAM                 | 2 GB                |
 | Processadores               | 1 vCPU              |
 | Armazenamento               | 32 GB               |
-| Rede                        | -                   |
+| Rede                        | Placa em Modo Bridge|
 | Computador hospedeiro       | Windows 11          |
 
 ### 3.3 Endereçamento do grupo (faixa 16–31)
@@ -278,14 +278,14 @@ sudo netplan apply
 Em cada uma das 9 VMs, usa-se o FQDN completo. Exemplo na VM1:
 
 ```bash
-sudo hostnamectl set-hostname vm1.grupo1.bsi-26-2.maceio.lab
-hostname status
+sudo hostnamectl set-hostname vm1
+hostnamectl status
 ```
 
 No gateway:
 
 ```bash
-sudo hostnamectl set-hostname vm-gateway.grupo1.bsi-26-2.maceio.lab
+sudo hostnamectl set-hostname vm-gateway
 ```
 
 ### 4.8 /etc/hosts
@@ -306,7 +306,7 @@ sudo nano /etc/hosts
 192.168.26.25    vm8.grupo1.bsi-26-2.maceio.lab    vm8
 ```
 
-A linha `127.0.1.1` criada na instalação deve apontar para o nome da própria VM (exemplo na VM1):
+A linha `127.0.1.1` criada na instalação deve apontar para o nome da própria VM (exemplo na VM Gateway):
 ```bash
 127.0.1.1   vm-gateway.grupo1.bsi-26-2.maceio.lab vm-gateway
 ```
@@ -314,8 +314,9 @@ A linha `127.0.1.1` criada na instalação deve apontar para o nome da própria 
 Verificação:
 
 ```bash
-getent hosts g1-pc1-gw
-getent hosts g1-pc4-vm2.grupo1.bsi-26-2.maceio.lab
+getent hosts vm-gateway
+getent hosts vm1
+getent hosts vm2.grupo1.bsi-26-2.maceio.lab
 ```
 
 **Figura 7 – Hostname e `/etc/hosts` configurados**
