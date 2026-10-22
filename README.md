@@ -325,7 +325,8 @@ getent hosts g1-pc4-vm2.grupo1.bsi-26-2.maceio.lab
 Cada VM tem o administrador (`administrador`) e **um usuário por integrante**, no formato `nomesobrenome` (minúsculas, sem acentos), com home em `/home/<usuário>`, shell `/bin/bash` e participação no grupo `sudo`. O conjunto é o mesmo em todas as VMs, inclusive no gateway.
 
 ```bash
-sudo useradd mariaeduarda
+sudo useradd -m -s /bin/bash mariaeduarda
+sudo usermod -aG sudo mariaeduarda
 
 # Verificação
 getent passwd mariaeduarda
