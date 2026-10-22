@@ -308,7 +308,7 @@ sudo nano /etc/hosts
 
 A linha `127.0.1.1` criada na instalação deve apontar para o nome da própria VM (exemplo na VM1):
 ```bash
-127.0.1.1   vm-gateway.grupo1.bsi-26-2.maceio.lab vm1
+127.0.1.1   vm-gateway.grupo1.bsi-26-2.maceio.lab vm-gateway
 ```
 
 Verificação:
