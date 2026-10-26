@@ -115,11 +115,11 @@ São 4 PCs do laboratório, com 2 VMs em cada um. O gateway é uma VM extra no P
 
 **Figura 1 – Topologia lógica e endereçamento do Grupo 1**
 
-<img width="1800" height="1604" alt="topologia-logica-etapa1" src="https://github.com/user-attachments/assets/a2ba2103-a5af-42c1-bea3-097961819022" />
+<img width="1800" height="1604" alt="topologia-logica-etapa1" src="https://github.com/user-attachments/assets/ac82aaf3-ecc9-4d5f-a1e4-772e1d2b131e" />
 
 **Figura 2 – Topologia física (4 PCs, 2 VMs em cada, gateway no PC1)**
 
-<img width="1780" height="830" alt="topologia-fisica-etapa1" src="https://github.com/user-attachments/assets/9461fcd7-5357-4c57-9025-9b3d11313ea0" />
+<img width="1780" height="830" alt="topologia-fisica-etapa1" src="https://github.com/user-attachments/assets/3e9a207c-ee3c-40c9-af68-63091c6f7481" />
 
 ## 4. Procedimento
 ### 4.1 Criação das VMs
