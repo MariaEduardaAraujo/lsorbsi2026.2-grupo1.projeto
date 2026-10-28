@@ -397,11 +397,14 @@ for h in vm-gateway vm8; do ping -c 2 $h.grupo1.bsi-26-2.maceio.lab; done
 
 **Figura 14 – Ping entre todas as VMs por IP, nome curto e FQDN**
 
-![Figura 14](INSERIR_LINK_DA_IMAGEM)
+<img width="479" height="131" alt="Captura de tela 2026-10-28 194009" src="https://github.com/user-attachments/assets/2278227a-23b1-4d2e-8a62-707b1f54fac2" /><br>
 
 **Figura 15 – Acesso SSH entre as VMs**
 
-<img width="711" height="717" alt="680913468-6a2828b7-9b5a-4af7-9d23-623253b0efeb" src="https://github.com/user-attachments/assets/58368b2f-36c4-49dc-9e9a-af48ec327313" />
+<img width="711" height="717" alt="680913468-6a2828b7-9b5a-4af7-9d23-623253b0efeb" src="https://github.com/user-attachments/assets/58368b2f-36c4-49dc-9e9a-af48ec327313" /> <br>
+<img width="173" height="38" alt="Captura de tela 2026-10-28 193421" src="https://github.com/user-attachments/assets/7c9af8d1-5437-4ff9-965d-b428c07a9080" /> <br>
+<img width="209" height="40" alt="Captura de tela 2026-10-28 192921" src="https://github.com/user-attachments/assets/4651ea94-e1eb-4ae9-8783-b8b6a6a6b32b" />
+
 
 ### 5.3 Saída para a internet pelo gateway
 
