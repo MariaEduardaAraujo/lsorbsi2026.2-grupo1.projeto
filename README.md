@@ -399,6 +399,7 @@ for h in vm-gateway vm8; do ping -c 2 $h.grupo1.bsi-26-2.maceio.lab; done
 
 <img width="479" height="131" alt="Captura de tela 2026-10-28 194009" src="https://github.com/user-attachments/assets/2278227a-23b1-4d2e-8a62-707b1f54fac2" /><br>
 <img width="761" height="360" alt="image" src="https://github.com/user-attachments/assets/076e3220-de0b-4c17-9ac8-f1d20b1e3ce0" />
+<img width="1280" height="800" alt="figura 14" src="https://github.com/user-attachments/assets/335c7684-1814-4a86-8891-88978870787f" />
 
 **Figura 15 – Acesso SSH entre as VMs**
 
