@@ -398,6 +398,7 @@ for h in vm-gateway vm8; do ping -c 2 $h.grupo1.bsi-26-2.maceio.lab; done
 **Figura 14 – Ping entre todas as VMs por IP, nome curto e FQDN**
 
 <img width="479" height="131" alt="Captura de tela 2026-10-28 194009" src="https://github.com/user-attachments/assets/2278227a-23b1-4d2e-8a62-707b1f54fac2" /><br>
+<img width="761" height="360" alt="image" src="https://github.com/user-attachments/assets/076e3220-de0b-4c17-9ac8-f1d20b1e3ce0" />
 
 **Figura 15 – Acesso SSH entre as VMs**
 
