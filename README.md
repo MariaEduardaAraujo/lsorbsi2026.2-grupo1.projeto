@@ -1,12 +1,11 @@
 # Relatório de Projeto — Rede Virtualizada com 8 VMs e Gateway NAT (Etapa 1)
 
-> **Instituição:** IFAL <br>
-> **Disciplina:** LSOR <br>
+> **Instituição:** IFAL − **Disciplina:** LSOR <br>
 > **Turma:** bsi-26-2 (2026.2) <br>
 > **Professor(a):** Alaelson Jatobá <br>
 > **Aluno(a):** Daniel do Carmo, Davi da Silva, João Pedro de Castro Laranjeira e Maria Eduarda de Araújo <br>
 > **Grupo:** 1  <br>
-> **Datas:** 14/10/2026 <br>
+> **Datas:** 14/10/2026, 21/10/2026 e 28/10/2026 <br>
 
 ## 1. Ambiente
 
@@ -139,8 +138,8 @@ São 4 PCs do laboratório, com 2 VMs em cada um. O gateway é uma VM extra no P
 <img width="909" height="547" alt="8  vm gateway - print placa de rede 2" src="https://github.com/user-attachments/assets/ae125e04-eb52-46c6-a9a9-23dd0177029c" />
 
 **Figura 4 – Adaptador de rede de uma VM do grupo no VirtualBox**
-<img width="889" height="518" alt="Captura de tela 2026-10-21 195317" src="https://github.com/user-attachments/assets/e5bf0e53-7072-4c68-8e2a-0e6df1083958" />
 
+<img width="889" height="518" alt="Captura de tela 2026-10-21 195317" src="https://github.com/user-attachments/assets/e5bf0e53-7072-4c68-8e2a-0e6df1083958" />
 
 ### 4.2 Gateway — Netplan com duas placas 
 Confirmar os nomes das interfaces e escolher um IP livre na rede do laboratório:
@@ -200,6 +199,10 @@ sudo sysctl net.ipv4.ip_forward
 
 Resultado esperado: `net.ipv4.ip_forward = 1`.
 
+**Figura 6 – Verificação do `ip_forward`**
+
+<img width="459" height="61" alt="4  vm gateway comando sysctl ipv4" src="https://github.com/user-attachments/assets/d847f41d-dfeb-4026-a452-b9843f01cb89" />
+
 ### 4.4 Gateway — NAT e regras de FORWARD com IPTables
 Limpar regras antigas (opcional) e criar as novas:
 
@@ -230,6 +233,14 @@ sudo iptables -t nat -L -n -v
 sudo iptables -L -n -v
 ```
 
+**Figura 7 – Regras de NAT**
+
+<img width="647" height="240" alt="image" src="https://github.com/user-attachments/assets/a22dfe2b-b096-4953-aec9-7e5dadb0c1b4" />
+
+**Figura 8 – Regras FORWARD**
+
+<img width="1000" height="509" alt="680888006-a242b57e-084b-4974-8b9f-7161c54cd64d" src="https://github.com/user-attachments/assets/130a70b3-89ee-4b8a-89e3-0401de26a835" />
+
 ### 4.5 Gateway — Persistência das regras
 ```bash
 sudo apt update
@@ -239,6 +250,10 @@ sudo cat /etc/iptables/rules.v4
 ```
 
 As regras IPv4 ficam em `/etc/iptables/rules.v4`. O `ip_forward` já está persistente pelo arquivo `/etc/sysctl.d/99-ipforward.conf`.
+
+**Figura 9 – Persistência das regras**
+
+<img width="801" height="596" alt="3  vm gateway - persistindo iptables" src="https://github.com/user-attachments/assets/2e6b73a6-31a3-4462-ae49-b027b3e3cb6d" />
 
 ### 4.6 VM1 a VM8 — Netplan com o gateway do grupo
 Em cada VM, o arquivo é igual, mudando apenas o IP (ver tabela 3.4):
@@ -276,7 +291,7 @@ ip route
 | VM7 | vm7 | .24 |
 | VM8 | vm8 | .25 |
 
-**Figura 6 – Netplan de uma VM do grupo**
+**Figura 10 – Netplan de uma VM do grupo**
 
 <img width="954" height="419" alt="oooo" src="https://github.com/user-attachments/assets/8376e8c9-d05d-47bc-886f-ebe4325355b2" />
 
@@ -326,7 +341,7 @@ getent hosts vm-gateway
 getent hosts vm8.grupo1.bsi-26-2.maceio.lab
 ```
 
-**Figura 7 – Hostname e `/etc/hosts` configurados**
+**Figura 11 – Hostname e `/etc/hosts` configurados**
 <img width="762" height="357" alt="host" src="https://github.com/user-attachments/assets/7e61acd6-92be-4dda-bbb6-103936fb1dfc" /> <br>
 
 ### 4.9 Usuários
@@ -342,7 +357,7 @@ ls -l /home
 id mariaeduarda
 ```
 
-**Figura 8 – Usuários criados na VM**
+**Figura 12 – Usuários criados na VM**
 
 <img width="758" height="237" alt="usu" src="https://github.com/user-attachments/assets/61937065-b949-4d2b-9a99-957e9be3bd71" />
 
@@ -364,31 +379,7 @@ O login por senha é aceito por padrão, e os usuários dos integrantes podem ac
 ## 5. Testes e Capturas de Tela
 Todos os testes seguem a ordem do roteiro. Cada figura corresponde a uma captura de tela.
 
-### 5.1 Gateway — rede, encaminhamento e regras
-Comandos: `ip -br a , ip route , sudo sysctl net.ipv4.ip_forward , sudo iptables -
-t nat -L -n -v , sudo iptables -L -n -v`.
-
-**Figura 9 – Interfaces e rotas do gateway ( ip -br a e ip route )**
-
-<img width="864" height="512" alt="Captura de tela 2026-10-26 083350" src="https://github.com/user-attachments/assets/44be1962-f9be-4e0f-8a82-1867a744972d" />
-
-**Figura 10 – Verificação do `ip_forward`**
-
-<img width="459" height="61" alt="4  vm gateway comando sysctl ipv4" src="https://github.com/user-attachments/assets/d847f41d-dfeb-4026-a452-b9843f01cb89" />
-
-**Figura 11 – Regras de NAT**
-
-<img width="647" height="240" alt="image" src="https://github.com/user-attachments/assets/a22dfe2b-b096-4953-aec9-7e5dadb0c1b4" />
-
-**Figura 12 – Regras FORWARD**
-
-<img width="1000" height="509" alt="680888006-a242b57e-084b-4974-8b9f-7161c54cd64d" src="https://github.com/user-attachments/assets/130a70b3-89ee-4b8a-89e3-0401de26a835" />
-
-**Figura 13 – Persistência das regras**
-
-<img width="801" height="596" alt="3  vm gateway - persistindo iptables" src="https://github.com/user-attachments/assets/2e6b73a6-31a3-4462-ae49-b027b3e3cb6d" />
-
-### 5.2 Conectividade entre as VMs do grupo
+### 5.1 Conectividade entre as VMs do grupo
 Ping entre todas as VMs, por IP, nome curto e FQDN:
 ```bash
 for h in 192.168.26.17 192.168.26.{18..25}; do ping -c 2 $h; done
@@ -396,13 +387,13 @@ for h in vm-gateway vm1 vm2 vm3 vm4 vm5 vm6 vm7 vm8; do ping -c 2 $h; done
 for h in vm-gateway vm8; do ping -c 2 $h.grupo1.bsi-26-2.maceio.lab; done
 ```
 
-**Figura 14 – Ping entre todas as VMs por IP, nome curto e FQDN**
+**Figura 13 – Ping entre todas as VMs por IP, nome curto e FQDN**
 
 <img width="479" height="131" alt="Captura de tela 2026-10-28 194009" src="https://github.com/user-attachments/assets/2278227a-23b1-4d2e-8a62-707b1f54fac2" /><br>
 <img width="761" height="360" alt="image" src="https://github.com/user-attachments/assets/076e3220-de0b-4c17-9ac8-f1d20b1e3ce0" />
 <img width="748" height="504" alt="688168860-335c7684-1814-4a86-8891-88978870787f" src="https://github.com/user-attachments/assets/62ea5647-55f1-449d-928d-62ae2d3ddd43" />
 
-**Figura 15 – Acesso SSH entre as VMs**
+**Figura 14 – Acesso SSH entre as VMs**
 
 <img width="711" height="717" alt="680913468-6a2828b7-9b5a-4af7-9d23-623253b0efeb" src="https://github.com/user-attachments/assets/58368b2f-36c4-49dc-9e9a-af48ec327313" /> <br>
 <img width="173" height="38" alt="Captura de tela 2026-10-28 193421" src="https://github.com/user-attachments/assets/7c9af8d1-5437-4ff9-965d-b428c07a9080" /> <br>
@@ -411,15 +402,15 @@ for h in vm-gateway vm8; do ping -c 2 $h.grupo1.bsi-26-2.maceio.lab; done
 
 ### 5.3 Saída para a internet pelo gateway
 
-**Figura 16 – Ping para a internet ( ping 1.1.1.1 )**
+**Figura 15 – Ping para a internet ( ping 1.1.1.1 )**
 
 <img width="596" height="338" alt="Captura de tela 2026-10-21 203309" src="https://github.com/user-attachments/assets/186e4854-0d1f-4906-b990-1f082106dfe8" />
 
-**Figura 17 – Resolução de nomes  ( ping google.com )**
+**Figura 16 – Resolução de nomes  ( ping google.com )**
 
 <img width="859" height="271" alt="Captura de tela 2026-10-21 204026" src="https://github.com/user-attachments/assets/1fd6424d-0e74-4b24-a319-d9f3bbcd75c1" />
 
-**Figura 18 – Rastreamento da rota ( traceroute google.com )**
+**Figura 17 – Rastreamento da rota ( traceroute google.com )**
 
 <img width="941" height="262" alt="Captura de tela 2026-10-21 203531" src="https://github.com/user-attachments/assets/113987a1-09c3-4335-b2ce-ea52347607cf" />
 
