@@ -1,6 +1,7 @@
 # Guia de Configuração Individual das VMs — Grupo 1
 
-Passo a passo para configurar **cada VM** do grupo, uma por vez. Ordem recomendada: **gateway primeiro**, depois `vm1` a `vm8`.
+Passo a passo para configurar **cada VM** do grupo, uma por vez. <br>
+Ordem recomendada: **gateway primeiro**, depois `vm1` a `vm8`.
 
 ## 1. Resumo
 
@@ -85,7 +86,6 @@ Duas placas em Bridge: Adaptador 1 (WAN) e Adaptador 2 (LAN).
 ### 3.1 Netplan
 
 ```bash
-ip -br link
 ping -c 2 172.20.23.67     # deve falhar: IP livre
 sudo nano /etc/netplan/00-installer-config.yaml
 ```
@@ -112,10 +112,8 @@ network:
 
 ```bash
 sudo netplan apply
-ip -br a
-ip route
+sudo cat /etc/netplan/00-installer-config.yaml
 ```
-
 Esperado: `enp0s3` com `172.20.23.67/22`, `enp0s8` com `192.168.26.17/28` e `default via 172.20.20.1`.
 
 ### 3.2 Encaminhamento IPv4
@@ -177,8 +175,6 @@ Aplicar e testar (em qualquer cliente):
 
 ```bash
 sudo netplan apply
-ip -br a
-ip route
 ping -c 2 192.168.26.17
 ping -c 2 1.1.1.1
 ```
