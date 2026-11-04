@@ -57,6 +57,9 @@ Ajuste a linha `127.0.1.1` para o nome da própria VM:
 127.0.1.1    <nome>.grupo1.bsi-26-2.maceio.lab    <nome>
 ```
 
+**Figura 1 – Hostname e `/etc/hosts` configurados para a VM7**
+<img width="762" height="357" alt="host" src="https://github.com/user-attachments/assets/7e61acd6-92be-4dda-bbb6-103936fb1dfc" /> <br>
+
 ### 2.3 Usuários
 
 Substitua pelos usuários dos integrantes (lista da planilha de acompanhamento):
@@ -116,7 +119,7 @@ sudo cat /etc/netplan/00-installer-config.yaml
 ```
 Esperado: `enp0s3` com `172.20.23.67/22`, `enp0s8` com `192.168.26.17/28` e `default via 172.20.20.1`.
 
-**Figura X – Netplan do gateway**
+**Figura 2 – Netplan do gateway**
 <img width="864" height="512" alt="Captura de tela 2026-10-26 083350" src="https://github.com/user-attachments/assets/56cc4298-5202-4f31-a7c1-b86774070fc5" />
 
 
@@ -131,7 +134,7 @@ sudo sysctl net.ipv4.ip_forward
 
 Esperado: `net.ipv4.ip_forward = 1`.
 
-**Figura X – Verificação do `ip_forward`**
+**Figura 3 – Verificação do `ip_forward`** <br>
 <img width="459" height="61" alt="4  vm gateway comando sysctl ipv4" src="https://github.com/user-attachments/assets/d847f41d-dfeb-4026-a452-b9843f01cb89" />
 
 ### 3.3 NAT e FORWARD
@@ -146,10 +149,7 @@ sudo iptables -t nat -L -n -v
 sudo iptables -L -n -v
 ```
 
-**Figura X – Regras de NAT**
-<img width="647" height="240" alt="image" src="https://github.com/user-attachments/assets/a22dfe2b-b096-4953-aec9-7e5dadb0c1b4" />
-
-**Figura X – Regras FORWARD**
+**Figura 4 – Regras de NAT e FORWARD** <br>
 <img width="1000" height="509" alt="680888006-a242b57e-084b-4974-8b9f-7161c54cd64d" src="https://github.com/user-attachments/assets/130a70b3-89ee-4b8a-89e3-0401de26a835" />
 
 ### 3.4 Persistência
@@ -162,7 +162,7 @@ sudo cat /etc/iptables/rules.v4
 
 Depois dos passos da seção 2 (hostname `vm-gateway`, hosts, usuários, SSH), o gateway está pronto.
 
-**Figura X – Persistência das regras**
+**Figura 5 – Persistência das regras** <br>
 <img width="801" height="596" alt="3  vm gateway - persistindo iptables" src="https://github.com/user-attachments/assets/2e6b73a6-31a3-4462-ae49-b027b3e3cb6d" />
 
 ## 4. VMs clientes (`vm1` a `vm8`)
@@ -186,6 +186,9 @@ network:
       nameservers:
         addresses: [172.20.20.1, 1.1.1.1, 8.8.8.8]
 ```
+
+**Figura 6 – Netplan de uma VM do grupo - VM7**
+<img width="954" height="419" alt="oooo" src="https://github.com/user-attachments/assets/8376e8c9-d05d-47bc-886f-ebe4325355b2" />
 
 Aplicar e testar (em qualquer cliente):
 
@@ -288,9 +291,6 @@ sudo netplan apply
 ip -br a
 ping -c 2 192.168.26.17
 ```
-
-**Figura X – Hostname e `/etc/hosts` configurados**
-<img width="762" height="357" alt="host" src="https://github.com/user-attachments/assets/7e61acd6-92be-4dda-bbb6-103936fb1dfc" /> <br>
 
 Esperado: `enp0s3` com `192.168.26.25/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm8`), usuários e SSH (seção 2).
 
