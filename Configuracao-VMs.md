@@ -58,7 +58,7 @@ Ajuste a linha `127.0.1.1` para o nome da própria VM:
 ```
 
 **Figura 1 – Hostname e `/etc/hosts` configurados para a VM7**
-<img width="762" height="357" alt="host" src="https://github.com/user-attachments/assets/7e61acd6-92be-4dda-bbb6-103936fb1dfc" /> <br>
+<img width="762" height="357" alt="image" src="https://github.com/user-attachments/assets/a55efd4c-d6ac-4dd5-8ac3-b34a3f7770b4" /><br>
 
 ### 2.3 Usuários
 
@@ -135,7 +135,7 @@ sudo sysctl net.ipv4.ip_forward
 Esperado: `net.ipv4.ip_forward = 1`.
 
 **Figura 3 – Verificação do `ip_forward`** <br>
-<img width="459" height="61" alt="4  vm gateway comando sysctl ipv4" src="https://github.com/user-attachments/assets/d847f41d-dfeb-4026-a452-b9843f01cb89" />
+[<img width="459" height="61" alt="4  vm gateway comando sysctl ipv4" src="https://github.com/user-attachments/assets/d847f41d-dfeb-4026-a452-b9843f01cb89" />](https://github.com/MariaEduardaAraujo/lsorbsi2026.2-grupo1.projeto/blob/main/imagens/fg%203%20ipfoward.png?raw=true)
 
 ### 3.3 NAT e FORWARD
 
@@ -150,7 +150,7 @@ sudo iptables -L -n -v
 ```
 
 **Figura 4 – Regras de NAT e FORWARD** <br>
-<img width="1000" height="509" alt="680888006-a242b57e-084b-4974-8b9f-7161c54cd64d" src="https://github.com/user-attachments/assets/130a70b3-89ee-4b8a-89e3-0401de26a835" />
+[<img width="1000" height="509" alt="680888006-a242b57e-084b-4974-8b9f-7161c54cd64d" src="https://github.com/user-attachments/assets/130a70b3-89ee-4b8a-89e3-0401de26a835" />](https://github.com/MariaEduardaAraujo/lsorbsi2026.2-grupo1.projeto/blob/main/imagens/fg%204%20configuracao%20iptables.png?raw=true)
 
 ### 3.4 Persistência
 
@@ -163,7 +163,7 @@ sudo cat /etc/iptables/rules.v4
 Depois dos passos da seção 2 (hostname `vm-gateway`, hosts, usuários, SSH), o gateway está pronto.
 
 **Figura 5 – Persistência das regras** <br>
-<img width="801" height="596" alt="3  vm gateway - persistindo iptables" src="https://github.com/user-attachments/assets/2e6b73a6-31a3-4462-ae49-b027b3e3cb6d" />
+[<img width="801" height="596" alt="3  vm gateway - persistindo iptables" src="https://github.com/user-attachments/assets/2e6b73a6-31a3-4462-ae49-b027b3e3cb6d" />](https://github.com/MariaEduardaAraujo/lsorbsi2026.2-grupo1.projeto/blob/main/imagens/fg%205%20persistindo%20iptables.png?raw=true)
 
 ## 4. VMs clientes (`vm1` a `vm8`)
 
@@ -188,7 +188,8 @@ network:
 ```
 
 **Figura 6 – Netplan de uma VM do grupo - VM7**
-<img width="954" height="419" alt="oooo" src="https://github.com/user-attachments/assets/8376e8c9-d05d-47bc-886f-ebe4325355b2" />
+[<img width="954" height="419" alt="oooo" src="https://github.com/user-attachments/assets/8376e8c9-d05d-47bc-886f-ebe4325355b2" />
+](https://github.com/MariaEduardaAraujo/lsorbsi2026.2-grupo1.projeto/blob/main/imagens/fg6.png?raw=true)
 
 Aplicar e testar (em qualquer cliente):
 
@@ -306,7 +307,12 @@ ping -c 2 192.168.26.17
 ```
 Esperado: `enp0s3` com `192.168.26.24/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm7`), usuários e SSH (seção 2).
 
-**Figura 14 – Testes de ping na VM7**
+**Figura 14 – Testes de ping na VM7** <br>
+<img width="954" height="419" alt="host" src="./imagens/vm7 cat-host-print.png" />
+<img width="954" height="419" alt="netplan" src="./imagens/vm7 cat-netplan-print.png" />
+<img width="954" height="419" alt="ip" src="./imagens/vm7 ip -br a.png" />
+<img width="954" height="419" alt="ping" src="./imagens/vm7 ping.png" />
+
 
 ### 4.8 vm8 — 192.168.26.25
 
@@ -319,7 +325,11 @@ ping -c 2 192.168.26.17
 ```
 Esperado: `enp0s3` com `192.168.26.25/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm8`), usuários e SSH (seção 2).
 
-**Figura 15 – Testes de ping na VM8**
+**Figura 15 – Testes de ping na VM8** <br>
+<img width="954" height="419" alt="host" src="./imagens/vm8 cat-host-print.png" />
+<img width="954" height="419" alt="netplan" src="./imagens/vm8 cat-netplan-print.png" />
+<img width="954" height="419" alt="ip" src="./imagens/vm8 ip -br a.png" />
+<img width="954" height="419" alt="ping" src="./imagens/vm8 ping.png" />
 
 ## 5. Testes finais (em qualquer VM cliente)
 
