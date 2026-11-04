@@ -358,7 +358,7 @@ id mariaeduarda
 
 **Figura 12 – Usuários criados na VM**
 
-<img width="758" height="237" alt="usu" src="https://github.com/user-attachments/assets/61937065-b949-4d2b-9a99-957e9be3bd71" />
+<img width="758" height="237" alt="usu" src="./imagens/nomes dos usuarios ajustados.png" />
 
 ---
 ### 4.10 Acesso remoto SSH
