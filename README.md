@@ -137,8 +137,8 @@ São 4 PCs do laboratório, com 2 VMs em cada um. O gateway é uma VM extra no P
 [<img width="909" height="547" alt="8  vm gateway - print placa de rede 2" src="https://github.com/user-attachments/assets/ae125e04-eb52-46c6-a9a9-23dd0177029c" />](https://github.com/MariaEduardaAraujo/lsorbsi2026.2-grupo1.projeto/blob/main/imagens/fg%203.2%20print%20placa%20de%20rede%202.png?raw=true)
 
 **Figura 4 – Adaptador de rede de uma VM do grupo no VirtualBox**
-
-<img width="889" height="518" alt="Captura de tela 2026-10-21 195317" src="https://github.com/user-attachments/assets/e5bf0e53-7072-4c68-8e2a-0e6df1083958" />
+[
+<img width="889" height="518" alt="Captura de tela 2026-10-21 195317" src="https://github.com/user-attachments/assets/e5bf0e53-7072-4c68-8e2a-0e6df1083958" />](https://github.com/MariaEduardaAraujo/lsorbsi2026.2-grupo1.projeto/blob/main/imagens/fg4-adaptador-vm.png?raw=true)
 
 ### 4.2 Gateway — Netplan com duas placas 
 Confirmar os nomes das interfaces e escolher um IP livre na rede do laboratório:
@@ -183,8 +183,8 @@ Resultado esperado: enp0s3 com 172.20.23.67/22 , enp0s8 com 192.168.26.17/28 e a
 rota default via 172.20.20.1 dev enp0s3 .
 
 **Figura 5 – Netplan do gateway**
-
-<img width="864" height="512" alt="Captura de tela 2026-10-26 083350" src="https://github.com/user-attachments/assets/56cc4298-5202-4f31-a7c1-b86774070fc5" />
+[
+<img width="864" height="512" alt="Captura de tela 2026-10-26 083350" src="https://github.com/user-attachments/assets/56cc4298-5202-4f31-a7c1-b86774070fc5" />](https://github.com/MariaEduardaAraujo/lsorbsi2026.2-grupo1.projeto/blob/main/imagens/fg%205%20netplan%20do%20gateway.png?raw=true)
 
 ### 4.3 Gateway — Encaminhamento IPv4
 Habilitar imediatamente e tornar permanente:
@@ -198,9 +198,8 @@ sudo sysctl net.ipv4.ip_forward
 
 Resultado esperado: `net.ipv4.ip_forward = 1`.
 
-**Figura 6 – Verificação do `ip_forward`**
-
-<img width="459" height="61" alt="4  vm gateway comando sysctl ipv4" src="https://github.com/user-attachments/assets/d847f41d-dfeb-4026-a452-b9843f01cb89" />
+**Figura 6 – Verificação do `ip_forward`** <br>
+[<img width="507" height="52" alt="image" src="https://github.com/user-attachments/assets/e90d084b-a651-4584-98ec-7a34696f2792" />](https://github.com/MariaEduardaAraujo/lsorbsi2026.2-grupo1.projeto/blob/main/imagens/fg%203%20ipfoward.png?raw=true)
 
 ### 4.4 Gateway — NAT e regras de FORWARD com IPTables
 Limpar regras antigas (opcional) e criar as novas:
@@ -232,13 +231,11 @@ sudo iptables -t nat -L -n -v
 sudo iptables -L -n -v
 ```
 
-**Figura 7 – Regras de NAT**
-
-<img width="647" height="240" alt="image" src="https://github.com/user-attachments/assets/a22dfe2b-b096-4953-aec9-7e5dadb0c1b4" />
+**Figura 7 – Regras de NAT** <br>
+<img width="647" height="240" alt="image" src="https://github.com/user-attachments/assets/7991b05b-f05a-4788-bf5f-bfb12e4eaa09" />
 
 **Figura 8 – Regras FORWARD**
-
-<img width="1000" height="509" alt="680888006-a242b57e-084b-4974-8b9f-7161c54cd64d" src="https://github.com/user-attachments/assets/130a70b3-89ee-4b8a-89e3-0401de26a835" />
+[<img width="1000" height="509" alt="680888006-a242b57e-084b-4974-8b9f-7161c54cd64d" src="https://github.com/user-attachments/assets/130a70b3-89ee-4b8a-89e3-0401de26a835" />](https://github.com/MariaEduardaAraujo/lsorbsi2026.2-grupo1.projeto/blob/main/imagens/fg%204%20configuracao%20iptables.png?raw=true)
 
 ### 4.5 Gateway — Persistência das regras
 ```bash
@@ -250,9 +247,9 @@ sudo cat /etc/iptables/rules.v4
 
 As regras IPv4 ficam em `/etc/iptables/rules.v4`. O `ip_forward` já está persistente pelo arquivo `/etc/sysctl.d/99-ipforward.conf`.
 
-**Figura 9 – Persistência das regras**
-
-<img width="801" height="596" alt="3  vm gateway - persistindo iptables" src="https://github.com/user-attachments/assets/2e6b73a6-31a3-4462-ae49-b027b3e3cb6d" />
+**Figura 9 – Persistência das regras** <br>
+[
+<img width="801" height="596" alt="3  vm gateway - persistindo iptables" src="https://github.com/user-attachments/assets/2e6b73a6-31a3-4462-ae49-b027b3e3cb6d" />](https://github.com/MariaEduardaAraujo/lsorbsi2026.2-grupo1.projeto/blob/main/imagens/fg%205%20persistindo%20iptables.png?raw=true)
 
 ### 4.6 VM1 a VM8 — Netplan com o gateway do grupo
 Em cada VM, o arquivo é igual, mudando apenas o IP (ver tabela 3.4):
@@ -291,8 +288,10 @@ ip route
 | VM8 | vm8 | .25 |
 
 **Figura 10 – Netplan de uma VM do grupo**
+[
+<img width="954" height="419" alt="image" src="https://github.com/user-attachments/assets/9b81b3b8-c7cd-410e-8218-d12202ab1d0d" />](https://github.com/MariaEduardaAraujo/lsorbsi2026.2-grupo1.projeto/blob/main/imagens/fg6.png?raw=true)
 
-<img width="954" height="419" alt="oooo" src="https://github.com/user-attachments/assets/8376e8c9-d05d-47bc-886f-ebe4325355b2" />
+> Mais imagens da configuração das VMs em: https://github.com/MariaEduardaAraujo/lsorbsi2026.2-grupo1.projeto/blob/main/Configuracao-VMs.md
 
 ### 4.7 Hostname com FQDN (Aula 08, seção 0)
 Em cada uma das 9 VMs, usa-se o FQDN completo. Exemplo na VM1:
@@ -341,7 +340,9 @@ getent hosts vm8.grupo1.bsi-26-2.maceio.lab
 ```
 
 **Figura 11 – Hostname e `/etc/hosts` configurados**
-<img width="762" height="357" alt="host" src="https://github.com/user-attachments/assets/7e61acd6-92be-4dda-bbb6-103936fb1dfc" /> <br>
+[<img width="762" height="357" alt="host" src="https://github.com/user-attachments/assets/7e61acd6-92be-4dda-bbb6-103936fb1dfc" />](https://github.com/MariaEduardaAraujo/lsorbsi2026.2-grupo1.projeto/blob/main/imagens/vm6%20-%20hosts.png?raw=true) <br>
+
+> Mais imagens da configuração das VMs em: https://github.com/MariaEduardaAraujo/lsorbsi2026.2-grupo1.projeto/blob/main/Configuracao-VMs.md
 
 ### 4.9 Usuários
 Cada VM tem o administrador (`administrador`) e **um usuário por integrante**, no formato `nomesobrenome` (minúsculas, sem acentos), com home em `/home/<usuário>`, shell `/bin/bash` e participação no grupo `sudo`. O conjunto é o mesmo em todas as VMs, inclusive no gateway.
@@ -351,14 +352,11 @@ sudo useradd -m -s /bin/bash mariaeduarda
 sudo usermod -aG sudo mariaeduarda
 
 # Verificação
-getent passwd mariaeduarda
-ls -l /home
-id mariaeduarda
+getent passwd | tail -n 4
 ```
 
 **Figura 12 – Usuários criados na VM**
-
-<img width="758" height="237" alt="usu" src="./imagens/nomes dos usuarios ajustados.png" />
+[<img width="758" height="237" alt="usu" src="./imagens/nomes dos usuarios ajustados.png" />](https://github.com/MariaEduardaAraujo/lsorbsi2026.2-grupo1.projeto/blob/main/imagens/nomes%20dos%20usuarios%20ajustados.png?raw=true)
 
 ---
 ### 4.10 Acesso remoto SSH
@@ -416,9 +414,8 @@ for h in vm-gateway vm8; do ping -c 2 $h.grupo1.bsi-26-2.maceio.lab; done
 ---
 
 ## 6. Problemas e Soluções
-Durante a atividade, não foram identificados problemas que impedissem a configuração do
-ambiente. Os procedimentos seguiram as orientações e os testes apresentaram os
-resultados esperados.
+Durante a execução da atividade, não foram identificados problemas que impedissem a configuração do ambiente. Os procedimentos seguiram as orientações e os testes apresentaram os resultados esperados.
+Entretanto, durante a reprodução da atividade, dois problemas foram identificados, como a ausência de um perfil de usuário na nas vms 3 e 4, e o ip repetido na vm 8.
 
 ---
 
