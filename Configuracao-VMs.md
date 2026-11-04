@@ -197,6 +197,8 @@ sudo netplan apply
 ping -c 2 192.168.26.17
 ping -c 2 1.1.1.1
 ```
+**Figura 7 – Testes de ping em uma VM -**
+
 
 ### 4.1 vm1 — 192.168.26.18
 
@@ -207,8 +209,9 @@ sudo netplan apply
 ip -br a
 ping -c 2 192.168.26.17
 ```
-
 Esperado: `enp0s3` com `192.168.26.18/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm1`), usuários e SSH (seção 2).
+
+**Figura 8 – Testes de ping na VM1**
 
 ### 4.2 vm2 — 192.168.26.19
 
@@ -219,8 +222,9 @@ sudo netplan apply
 ip -br a
 ping -c 2 192.168.26.17
 ```
-
 Esperado: `enp0s3` com `192.168.26.19/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm2`), usuários e SSH (seção 2).
+
+**Figura 9 – Testes de ping na VM2**
 
 ### 4.3 vm3 — 192.168.26.20
 
@@ -231,8 +235,9 @@ sudo netplan apply
 ip -br a
 ping -c 2 192.168.26.17
 ```
-
 Esperado: `enp0s3` com `192.168.26.20/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm3`), usuários e SSH (seção 2).
+
+**Figura 10 – Testes de ping na VM3**
 
 ### 4.4 vm4 — 192.168.26.21
 
@@ -243,8 +248,9 @@ sudo netplan apply
 ip -br a
 ping -c 2 192.168.26.17
 ```
-
 Esperado: `enp0s3` com `192.168.26.21/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm4`), usuários e SSH (seção 2).
+
+**Figura 11 – Testes de ping na VM4**
 
 ### 4.5 vm5 — 192.168.26.22
 
@@ -255,8 +261,9 @@ sudo netplan apply
 ip -br a
 ping -c 2 192.168.26.17
 ```
-
 Esperado: `enp0s3` com `192.168.26.22/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm5`), usuários e SSH (seção 2).
+
+**Figura 12 – Testes de ping na VM5**
 
 ### 4.6 vm6 — 192.168.26.23
 
@@ -267,8 +274,9 @@ sudo netplan apply
 ip -br a
 ping -c 2 192.168.26.17
 ```
-
 Esperado: `enp0s3` com `192.168.26.23/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm6`), usuários e SSH (seção 2).
+
+**Figura 13 – Testes de ping na VM6**
 
 ### 4.7 vm7 — 192.168.26.24
 
@@ -279,8 +287,9 @@ sudo netplan apply
 ip -br a
 ping -c 2 192.168.26.17
 ```
-
 Esperado: `enp0s3` com `192.168.26.24/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm7`), usuários e SSH (seção 2).
+
+**Figura 14 – Testes de ping na VM7**
 
 ### 4.8 vm8 — 192.168.26.25
 
@@ -291,8 +300,9 @@ sudo netplan apply
 ip -br a
 ping -c 2 192.168.26.17
 ```
-
 Esperado: `enp0s3` com `192.168.26.25/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm8`), usuários e SSH (seção 2).
+
+**Figura 15 – Testes de ping na VM8**
 
 ## 5. Testes finais (em qualquer VM cliente)
 
@@ -305,7 +315,6 @@ sudo apt install -y traceroute
 traceroute google.com
 ssh <usuario>@vm3
 ```
-
 - O primeiro salto do `traceroute` deve ser `192.168.26.17`.
 - No gateway: `sysctl net.ipv4.ip_forward`, `sudo iptables -t nat -L -n -v`, `sudo iptables -L -n -v`.
 
