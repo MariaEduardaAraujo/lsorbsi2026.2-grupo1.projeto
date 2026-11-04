@@ -116,6 +116,10 @@ sudo cat /etc/netplan/00-installer-config.yaml
 ```
 Esperado: `enp0s3` com `172.20.23.67/22`, `enp0s8` com `192.168.26.17/28` e `default via 172.20.20.1`.
 
+**Figura X – Netplan do gateway**
+<img width="864" height="512" alt="Captura de tela 2026-10-26 083350" src="https://github.com/user-attachments/assets/56cc4298-5202-4f31-a7c1-b86774070fc5" />
+
+
 ### 3.2 Encaminhamento IPv4
 
 ```bash
@@ -126,6 +130,9 @@ sudo sysctl net.ipv4.ip_forward
 ```
 
 Esperado: `net.ipv4.ip_forward = 1`.
+
+**Figura X – Verificação do `ip_forward`**
+<img width="459" height="61" alt="4  vm gateway comando sysctl ipv4" src="https://github.com/user-attachments/assets/d847f41d-dfeb-4026-a452-b9843f01cb89" />
 
 ### 3.3 NAT e FORWARD
 
@@ -139,6 +146,12 @@ sudo iptables -t nat -L -n -v
 sudo iptables -L -n -v
 ```
 
+**Figura X – Regras de NAT**
+<img width="647" height="240" alt="image" src="https://github.com/user-attachments/assets/a22dfe2b-b096-4953-aec9-7e5dadb0c1b4" />
+
+**Figura X – Regras FORWARD**
+<img width="1000" height="509" alt="680888006-a242b57e-084b-4974-8b9f-7161c54cd64d" src="https://github.com/user-attachments/assets/130a70b3-89ee-4b8a-89e3-0401de26a835" />
+
 ### 3.4 Persistência
 
 ```bash
@@ -148,6 +161,9 @@ sudo cat /etc/iptables/rules.v4
 ```
 
 Depois dos passos da seção 2 (hostname `vm-gateway`, hosts, usuários, SSH), o gateway está pronto.
+
+**Figura X – Persistência das regras**
+<img width="801" height="596" alt="3  vm gateway - persistindo iptables" src="https://github.com/user-attachments/assets/2e6b73a6-31a3-4462-ae49-b027b3e3cb6d" />
 
 ## 4. VMs clientes (`vm1` a `vm8`)
 
@@ -179,7 +195,7 @@ ping -c 2 192.168.26.17
 ping -c 2 1.1.1.1
 ```
 
-### 4.1 vm1 (PC1) — 192.168.26.18
+### 4.1 vm1 — 192.168.26.18
 
 ```bash
 sudo hostnamectl set-hostname vm1.grupo1.bsi-26-2.maceio.lab
@@ -191,7 +207,7 @@ ping -c 2 192.168.26.17
 
 Esperado: `enp0s3` com `192.168.26.18/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm1`), usuários e SSH (seção 2).
 
-### 4.2 vm2 (PC1) — 192.168.26.19
+### 4.2 vm2 — 192.168.26.19
 
 ```bash
 sudo hostnamectl set-hostname vm2.grupo1.bsi-26-2.maceio.lab
@@ -203,7 +219,7 @@ ping -c 2 192.168.26.17
 
 Esperado: `enp0s3` com `192.168.26.19/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm2`), usuários e SSH (seção 2).
 
-### 4.3 vm3 (PC2) — 192.168.26.20
+### 4.3 vm3 — 192.168.26.20
 
 ```bash
 sudo hostnamectl set-hostname vm3.grupo1.bsi-26-2.maceio.lab
@@ -215,7 +231,7 @@ ping -c 2 192.168.26.17
 
 Esperado: `enp0s3` com `192.168.26.20/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm3`), usuários e SSH (seção 2).
 
-### 4.4 vm4 (PC2) — 192.168.26.21
+### 4.4 vm4 — 192.168.26.21
 
 ```bash
 sudo hostnamectl set-hostname vm4.grupo1.bsi-26-2.maceio.lab
@@ -227,7 +243,7 @@ ping -c 2 192.168.26.17
 
 Esperado: `enp0s3` com `192.168.26.21/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm4`), usuários e SSH (seção 2).
 
-### 4.5 vm5 (PC3) — 192.168.26.22
+### 4.5 vm5 — 192.168.26.22
 
 ```bash
 sudo hostnamectl set-hostname vm5.grupo1.bsi-26-2.maceio.lab
@@ -239,7 +255,7 @@ ping -c 2 192.168.26.17
 
 Esperado: `enp0s3` com `192.168.26.22/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm5`), usuários e SSH (seção 2).
 
-### 4.6 vm6 (PC3) — 192.168.26.23
+### 4.6 vm6 — 192.168.26.23
 
 ```bash
 sudo hostnamectl set-hostname vm6.grupo1.bsi-26-2.maceio.lab
@@ -251,7 +267,7 @@ ping -c 2 192.168.26.17
 
 Esperado: `enp0s3` com `192.168.26.23/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm6`), usuários e SSH (seção 2).
 
-### 4.7 vm7 (PC4) — 192.168.26.24
+### 4.7 vm7 — 192.168.26.24
 
 ```bash
 sudo hostnamectl set-hostname vm7.grupo1.bsi-26-2.maceio.lab
@@ -263,7 +279,7 @@ ping -c 2 192.168.26.17
 
 Esperado: `enp0s3` com `192.168.26.24/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm7`), usuários e SSH (seção 2).
 
-### 4.8 vm8 (PC4) — 192.168.26.25
+### 4.8 vm8 — 192.168.26.25
 
 ```bash
 sudo hostnamectl set-hostname vm8.grupo1.bsi-26-2.maceio.lab
@@ -272,6 +288,9 @@ sudo netplan apply
 ip -br a
 ping -c 2 192.168.26.17
 ```
+
+**Figura X – Hostname e `/etc/hosts` configurados**
+<img width="762" height="357" alt="host" src="https://github.com/user-attachments/assets/7e61acd6-92be-4dda-bbb6-103936fb1dfc" /> <br>
 
 Esperado: `enp0s3` com `192.168.26.25/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm8`), usuários e SSH (seção 2).
 
