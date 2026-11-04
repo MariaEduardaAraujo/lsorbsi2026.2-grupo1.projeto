@@ -212,6 +212,10 @@ ping -c 2 192.168.26.17
 Esperado: `enp0s3` com `192.168.26.18/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm1`), usuários e SSH (seção 2).
 
 **Figura 8 – Testes de ping na VM1**
+<img width="954" height="419" alt="oooo" src="./imagens/vm1 - cat hosts.png" />
+<img width="954" height="419" alt="oooo" src="./imagens/vm1 - cat netplan.png" />
+<img width="954" height="419" alt="oooo" src="./imagens/vm1 - cat ip -br a.png" />
+<img width="954" height="419" alt="oooo" src="./imagens/vm1 - ping gateway.png" />
 
 ### 4.2 vm2 — 192.168.26.19
 
@@ -225,6 +229,10 @@ ping -c 2 192.168.26.17
 Esperado: `enp0s3` com `192.168.26.19/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm2`), usuários e SSH (seção 2).
 
 **Figura 9 – Testes de ping na VM2**
+<img width="954" height="419" alt="oooo" src="./imagens/vm2 - cat hosts.png" />
+<img width="954" height="419" alt="oooo" src="./imagens/vm2 - cat netplan.png" />
+<img width="954" height="419" alt="oooo" src="./imagens/vm2 - cat ip -br a.png" />
+<img width="954" height="419" alt="oooo" src="./imagens/vm2 - ping gateway.png" />
 
 ### 4.3 vm3 — 192.168.26.20
 
