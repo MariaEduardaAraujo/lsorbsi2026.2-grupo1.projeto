@@ -1,9 +1,10 @@
-# Relatório de Projeto — Rede Virtualizada com 8 VMs e Gateway NAT (Etapa 1)
+# Relatório de Projeto — Prática de Rede Virtualizada com 8 VMs e Gateway NAT (Etapa 1)
 
 > **Instituição:** IFAL − **Disciplina:** LSOR <br>
 > **Turma:** bsi-26-2 (2026.2) <br>
 > **Professor(a):** Alaelson Jatobá <br>
 > **Aluno(a):** Daniel do Carmo, Davi da Silva, João Pedro de Castro Laranjeira e Maria Eduarda de Araújo <br>
+> **Matrículas:** 2023011920, 2023011930, 2023007098 e 2023007122 <br>
 > **Grupo:** 1  <br>
 > **Datas:** 14/10/2026, 21/10/2026 e 28/10/2026 <br>
 
@@ -114,12 +115,11 @@ São 4 PCs do laboratório, com 2 VMs em cada um. O gateway é uma VM extra no P
 ```
 
 **Figura 1 – Topologia lógica e endereçamento do Grupo 1**
-
-<img width="1800" height="1604" alt="topologia-logica-etapa1" src="https://github.com/user-attachments/assets/ac82aaf3-ecc9-4d5f-a1e4-772e1d2b131e" />
+[<img width="1800" height="1604" alt="image" src="https://github.com/user-attachments/assets/4d15ebfe-66ff-4084-b1dc-4ff586ce882a" />
+](https://github.com/MariaEduardaAraujo/lsorbsi2026.2-grupo1.projeto/blob/main/imagens/topologia-logica-etapa1%20(1).png?raw=true)
 
 **Figura 2 – Topologia física (4 PCs, 2 VMs em cada, gateway no PC1)**
-
-<img width="1780" height="830" alt="topologia-fisica-etapa1" src="https://github.com/user-attachments/assets/3e9a207c-ee3c-40c9-af68-63091c6f7481" />
+[<img width="1780" height="830" alt="topologia-fisica-etapa1" src="https://github.com/user-attachments/assets/3e9a207c-ee3c-40c9-af68-63091c6f7481" />](https://github.com/MariaEduardaAraujo/lsorbsi2026.2-grupo1.projeto/blob/main/imagens/topologia-fisica-etapa1%20(1).png?raw=true)
 
 ## 4. Procedimento
 ### 4.1 Criação das VMs
@@ -132,10 +132,9 @@ São 4 PCs do laboratório, com 2 VMs em cada um. O gateway é uma VM extra no P
 5. Se o teclado estiver desconfigurado, usar `sudo dpkg-reconfigure keyboard-configuration` (ABNT2).
 
 **Figura 3 – Adaptadores de rede do gateway no VirtualBox**
+[<img width="908" height="540" alt="7  vm gateway - print placa de rede 1" src="https://github.com/user-attachments/assets/74764615-244b-4094-b2c7-34392ba714d4" />](https://github.com/MariaEduardaAraujo/lsorbsi2026.2-grupo1.projeto/blob/main/imagens/fg%203.1%20print%20placa%20de%20rede%201.png?raw=true)
 
-<img width="908" height="540" alt="7  vm gateway - print placa de rede 1" src="https://github.com/user-attachments/assets/74764615-244b-4094-b2c7-34392ba714d4" />
-
-<img width="909" height="547" alt="8  vm gateway - print placa de rede 2" src="https://github.com/user-attachments/assets/ae125e04-eb52-46c6-a9a9-23dd0177029c" />
+[<img width="909" height="547" alt="8  vm gateway - print placa de rede 2" src="https://github.com/user-attachments/assets/ae125e04-eb52-46c6-a9a9-23dd0177029c" />](https://github.com/MariaEduardaAraujo/lsorbsi2026.2-grupo1.projeto/blob/main/imagens/fg%203.2%20print%20placa%20de%20rede%202.png?raw=true)
 
 **Figura 4 – Adaptador de rede de uma VM do grupo no VirtualBox**
 
