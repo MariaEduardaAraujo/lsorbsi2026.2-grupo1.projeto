@@ -223,8 +223,8 @@ sudo iptables -A FORWARD -i enp0s8 -o enp0s3 -m conntrack --ctstate NEW,ESTABLIS
 sudo iptables -A FORWARD -i enp0s3 -o enp0s8 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 ```
 
-O `MASQUERADE` troca o IP de origem `192.168.26.18 a 25` pelo IP da WAN do gateway (`172.20.23.67`), e o laboratório passa a ver apenas esse endereço. Como a política padrão
-de FORWARD é DROP, a regra de retorno só aceita pacotes de conexões iniciadas pela LAN, e
+O `MASQUERADE` troca o IP de origem `192.168.26.18 a 25` pelo IP da WAN do gateway (`172.20.23.67`), e o laboratório passa a ver apenas esse endereço. Como a política
+de FORWARD está ACCEPT, a regra de retorno só aceita pacotes de conexões iniciadas pela LAN, e
 a rede do grupo não fica exposta a conexões novas vindas da WAN.
 
 Verificação:
