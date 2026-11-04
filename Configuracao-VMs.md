@@ -263,7 +263,12 @@ ping -c 2 192.168.26.17
 ```
 Esperado: `enp0s3` com `192.168.26.22/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm5`), usuários e SSH (seção 2).
 
-**Figura 12 – Testes de ping na VM5**
+**Figura 12 – Testes na VM5** <br>
+<img width="530" height="360" alt="Print VM5" src="https://github.com/user-attachments/assets/8eb65e4e-6523-4b9b-ab59-033e7482824e" /> <br>
+<img width="574" height="306" alt="Print cat netplan vm5" src="https://github.com/user-attachments/assets/e8f7f395-ffcd-4902-9f35-727297f2ac38" /> <br>
+<img width="615" height="86" alt="print ip -br vm5" src="https://github.com/user-attachments/assets/31f6b582-0266-4561-b3d4-b284ae5cbdd2" /> <br>
+<img width="498" height="86" alt="print ping vm5" src="https://github.com/user-attachments/assets/d71cb714-1cd8-4e03-bc3d-39ba731f8b22" /> <br>
+
 
 ### 4.6 vm6 — 192.168.26.23
 
@@ -276,7 +281,11 @@ ping -c 2 192.168.26.17
 ```
 Esperado: `enp0s3` com `192.168.26.23/28`. Em seguida, `/etc/hosts` (linha `127.0.1.1` = `vm6`), usuários e SSH (seção 2).
 
-**Figura 13 – Testes de ping na VM6**
+**Figura 13 – Testes de ping na VM6** <br>
+<img width="541" height="354" alt="print vm6" src="https://github.com/user-attachments/assets/14ef462a-bdaa-4626-9bc2-514589c623e4" />
+<img width="553" height="310" alt="print cat netplan vm6" src="https://github.com/user-attachments/assets/2ed9a3d1-ed79-4e46-85bf-047237c3c86f" />
+<img width="618" height="75" alt="print ip -br vm6" src="https://github.com/user-attachments/assets/dffdeb97-6889-400e-ab61-c500f8a0baaf" />
+<img width="510" height="148" alt="print ping vm6" src="https://github.com/user-attachments/assets/1c07a9c8-648f-4a69-bba3-613e4a414998" />
 
 ### 4.7 vm7 — 192.168.26.24
 
